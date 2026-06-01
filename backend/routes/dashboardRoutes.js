@@ -18,7 +18,8 @@ router.get("/stats", (req, res) => {
     ).length;
 
     const inProgressTickets = tickets.filter(
-        (t) => t.status === "In Progress"
+        (t) => t.status 
+        === "In Progress"
     ).length;
 
     const slaBreached = tickets.filter((t) => {
