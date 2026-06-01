@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Solution Repository</title>
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/ticket.css">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+        <div class="logo-section">
+            <h2>Ongc Support Portal</h2>
+            <p>Operations Workspace</p>
+        </div>
+
+        <div class="user-box">
+            <h4>CURRENT USER</h4>
+            <div class="user-info">
+                <span>👤</span>
+                <span id="userName"></span>
+            </div>
+        </div>
+
+        <nav class="menu">
+
+            <a class="active" href="tickets.html">
+                Solution Repository
+            </a>
+
+            <a href="dashboard.html">
+                Ticket Dashboard
+            </a>
+
+            <a href="add-solution.html">
+                Add Solution
+            </a>
+
+            <a href="#">
+                Categories
+            </a>
+
+            <a href="#">
+                Analytics
+            </a>
+
+        </nav>
+
+        <button class="logout-btn">
+            Secure Logout
+        </button>
+
+    </aside>
+
+    <!-- CONTENT -->
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <h1>Knowledge Base</h1>
+                <p>Knowledge & Support System</p>
+            </div>
+
+            <div class="session-box">
+                <span class="online-dot"></span>
+                ACTIVE SESSION
+            </div>
+
+        </header>
+
+        <section class="repository-container">
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Category</th>
+
+                        <th>Issue Title</th>
+
+                        <th>Preview</th>
+
+                        <th>Author</th>
+
+                        <th>Date</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="solutionTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="js/tickets.js"></script>
+
+</body>
+</html>

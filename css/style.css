@@ -1,0 +1,314 @@
+/* =========================
+   RESET
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#1f2937;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.app-container{
+    display:flex;
+    min-height:100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    width:280px;
+    background:#ffffff;
+    border-right:1px solid #e5e7eb;
+    display:flex;
+    flex-direction:column;
+}
+
+.logo-section{
+    padding:20px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.logo-section img{
+    width:42px;
+    height:42px;
+}
+
+.logo-title{
+    font-size:28px;
+    font-weight:700;
+    margin-top:10px;
+}
+
+.logo-subtitle{
+    font-size:14px;
+    color:#6b7280;
+}
+
+/* =========================
+   USER BOX
+========================= */
+
+.user-section{
+    padding:20px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.user-label{
+    font-size:12px;
+    font-weight:700;
+    color:#6b7280;
+    letter-spacing:1px;
+    margin-bottom:12px;
+}
+
+.user-info{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.user-id{
+    font-size:24px;
+    font-weight:700;
+}
+
+.user-role{
+    background:#eef2ff;
+    color:#1e3a8a;
+    padding:6px 12px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:600;
+}
+
+/* =========================
+   MENU
+========================= */
+
+.sidebar-menu{
+    flex:1;
+    padding:20px 15px;
+}
+
+.menu-heading{
+    font-size:12px;
+    color:#9ca3af;
+    margin-bottom:15px;
+    font-weight:700;
+}
+
+.sidebar-menu ul{
+    list-style:none;
+}
+
+.sidebar-menu li{
+    margin-bottom:8px;
+}
+
+.sidebar-menu a{
+    text-decoration:none;
+    color:#374151;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 16px;
+    border-radius:10px;
+    transition:.3s;
+    font-weight:500;
+}
+
+.sidebar-menu a:hover{
+    background:#f3f4f6;
+}
+
+.sidebar-menu a.active{
+    background:#e8eef7;
+    color:#1e3a8a;
+    font-weight:700;
+}
+
+/* =========================
+   LOGOUT
+========================= */
+
+.logout-area{
+    padding:20px;
+    border-top:1px solid #e5e7eb;
+}
+
+.logout-btn{
+    width:100%;
+    border:none;
+    background:#fff1f2;
+    color:#dc2626;
+    padding:14px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.main-content{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+}
+
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar{
+    height:85px;
+    background:#ffffff;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 30px;
+}
+
+.page-title{
+    font-size:34px;
+    font-weight:700;
+}
+
+.page-subtitle{
+    color:#6b7280;
+    font-size:15px;
+}
+
+.session-box{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.session-status{
+    width:10px;
+    height:10px;
+    background:#22c55e;
+    border-radius:50%;
+}
+
+.session-text{
+    font-size:12px;
+    font-weight:700;
+    color:#6b7280;
+}
+
+.session-user{
+    font-size:30px;
+    font-weight:700;
+}
+
+/* =========================
+   CONTENT WRAPPER
+========================= */
+
+.content-wrapper{
+    padding:30px;
+    flex:1;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card{
+    background:#ffffff;
+    border-radius:14px;
+    padding:20px;
+    border:1px solid #e5e7eb;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:12px 15px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#2563eb;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn{
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.btn-primary{
+    background:#2563eb;
+    color:white;
+}
+
+.btn-secondary{
+    background:#f3f4f6;
+    color:#111827;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#f9fafb;
+    text-align:left;
+    padding:16px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+td{
+    padding:16px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+    background:#ffffff;
+    border-top:1px solid #e5e7eb;
+    text-align:center;
+    padding:15px;
+    font-size:14px;
+    color:#6b7280;
+}

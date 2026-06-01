@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1001,
+    "status": "Open",
+    "sla": "Within SLA",
+    "priority": "High",
+    "subject": "Email Not Working",
+    "category": "IT",
+    "raisedBy": "Ashutosh",
+    "createdAt": "2025-05-20"
+  },
+  {
+    "id": 1002,
+    "status": "In Progress",
+    "sla": "Near Breach",
+    "priority": "Medium",
+    "subject": "Printer Issue",
+    "category": "Hardware",
+    "raisedBy": "Admin",
+    "createdAt": "2025-05-21"
+  },
+  {
+    "id": 1003,
+    "status": "Closed",
+    "sla": "Resolved",
+    "priority": "Low",
+    "subject": "Software Installation",
+    "category": "Application",
+    "raisedBy": "User1",
+    "createdAt": "2025-05-22"
+  },
+  {
+    "id": 1780215951641,
+    "status": "Open",
+    "sla": "Within SLA",
+    "priority": "High",
+    "subject": "Internet Issue",
+    "category": "Network",
+    "raisedBy": "Ashutosh",
+    "createdAt": "31/5/2026"
+  },
+  {
+    "id": 1780216047411,
+    "status": "Open",
+    "sla": "Within SLA",
+    "priority": "High",
+    "subject": "Internet Issue",
+    "category": "Network",
+    "raisedBy": "Ashutosh",
+    "createdAt": "31/5/2026"
+  }
+]

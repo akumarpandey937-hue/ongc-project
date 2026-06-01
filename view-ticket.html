@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution Details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .detail-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 28px;
+            max-width: 900px;
+        }
+
+        .detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin: 16px 0 24px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .detail-preview {
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <aside class="sidebar">
+        <div class="logo-section">
+            <img src="assets/icons/logo.webp" alt="logo">
+            <div class="logo-title">Ongc Support Portal</div>
+            <div class="logo-subtitle">Operations Workspace</div>
+        </div>
+
+        <div class="sidebar-menu">
+            <ul>
+                <li><a href="index.html" class="active">📖 Solution Repository</a></li>
+                <li><a href="dashboard.html">🎫 Ticket Dashboard</a></li>
+                <li><a href="raise-ticket.html">📝 Raise Ticket</a></li>
+                <li><a href="add-solution.html">➕ Add Solution</a></li>
+            </ul>
+        </div>
+
+        <div class="logout-area">
+            <button class="logout-btn" type="button">Secure Logout</button>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <div class="topbar">
+            <div>
+                <div class="page-title">Solution Details</div>
+                <div class="page-subtitle">Knowledge Base Article</div>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <a href="index.html" class="back-link">← Back to Repository</a>
+
+            <div class="detail-card" id="solutionDetail">
+                <p>Loading...</p>
+            </div>
+        </div>
+
+        <div class="footer">© Developed and Maintained by Database Group</div>
+    </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const container = document.getElementById("solutionDetail");
+
+    if (!id) {
+        container.innerHTML = "<p>Invalid solution ID.</p>";
+        return;
+    }
+
+    try {
+        const solution = await getSolution(id);
+
+        container.innerHTML = `
+            <h2>${solution.title}</h2>
+            <div class="detail-meta">
+                <span><strong>ID:</strong> ${solution.id}</span>
+                <span><strong>Category:</strong> ${solution.category}</span>
+                <span><strong>Author:</strong> ${solution.author || "-"}</span>
+                <span><strong>Date:</strong> ${solution.date || "-"}</span>
+            </div>
+            <div class="detail-preview">${solution.preview || "No description available."}</div>
+        `;
+    } catch (error) {
+        container.innerHTML = `<p>Could not load solution: ${error.message}</p>`;
+    }
+});
+</script>
+
+</body>
+</html>

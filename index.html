@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Knowledge Base</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ticket.css">
+
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo-section">
+
+            <img src="assets/icons/logo.webp" alt="logo">
+
+            <div class="logo-title">
+               Ongc Support Portal
+            </div>
+
+            <div class="logo-subtitle">
+                Operations Workspace
+            </div>
+
+        </div>
+
+        <!-- USER -->
+
+        <div class="user-section">
+
+            <div class="user-label">
+                CURRENT USER
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-id" id="userId">
+                    --
+                </div>
+
+                <div class="user-role" id="userRole">
+                    Admin
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- MENU -->
+
+        <div class="sidebar-menu">
+
+            <ul>
+
+                <li>
+                    <a href="index.html" class="active">
+                        📖 Solution Repository
+                    </a>
+                </li>
+
+                <li>
+                    <a href="dashboard.html">
+                        🎫 Ticket Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="raise-ticket.html">
+                        📝 Raise Ticket
+                    </a>
+                </li>
+
+                <li>
+                    <a href="add-solution.html">
+                        ➕ Add Solution
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        📂 Categories
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        📊 Analytics
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        📢 Announcements
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        📝 Feedback Dashboard
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <div class="logout-area">
+
+            <button class="logout-btn" id="logoutBtn">
+                Secure Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <div class="main-content">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div>
+
+                <div class="page-title">
+                    Knowledge Base
+                </div>
+
+                <div class="page-subtitle">
+                    Knowledge & Support System
+                </div>
+
+            </div>
+
+            <div class="session-box">
+
+                <div class="session-status"></div>
+
+                <div class="session-text">
+                    ACTIVE SESSION
+                </div>
+
+                <div class="session-user" id="sessionUser">
+                    --
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CONTENT -->
+
+        <div class="content-wrapper">
+
+            <!-- SEARCH -->
+
+            <div class="knowledge-toolbar">
+
+                <input
+                    type="text"
+                    id="solutionSearch"
+                    placeholder="Search solution..."
+                >
+
+            </div>
+
+            <!-- TABLE -->
+
+            <div class="card">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Category System</th>
+
+                            <th>Issue Title</th>
+
+                            <th>Preview</th>
+
+                            <th>Author</th>
+
+                            <th>Date</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="solutionTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+
+            © Developed and Maintained by Database Group
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/solutions.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

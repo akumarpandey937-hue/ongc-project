@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="createTicket()">
+Create Ticket
+</button>
+
+<script>
+async function createTicket() {
+
+    const response =
+    await fetch(
+        "http://localhost:5000/api/tickets",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                "application/json"
+            },
+            body: JSON.stringify({
+                subject: "Internet Issue",
+                priority: "High",
+                category: "Network",
+                raisedBy: "Ashutosh"
+            })
+        }
+    );
+
+    const data =
+    await response.json();
+
+    console.log(data);
+
+    alert(data.message);
+
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "category": "Network",
+    "title": "Internet Not Working",
+    "preview": "Restart router and check cable connection.",
+    "author": "Admin",
+    "date": "2026-05-31"
+  },
+  {
+    "id": 2,
+    "category": "Hardware",
+    "title": "Printer Offline",
+    "preview": "Reconnect printer and restart spooler service.",
+    "author": "Support Team",
+    "date": "2026-05-31"
+  }
+]

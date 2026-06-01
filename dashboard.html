@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo-section">
+
+            <img src="assets/icons/logo.webp" alt="logo">
+
+            <div class="logo-title">
+                Ongc Support Portal
+            </div>
+
+            <div class="logo-subtitle">
+                Operations Workspace
+            </div>
+
+        </div>
+
+        <div class="user-section">
+
+            <div class="user-label">
+                CURRENT USER
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-id" id="userId">
+                    --
+                </div>
+
+                <div class="user-role">
+                    Admin
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="sidebar-menu">
+
+            <ul>
+
+                <li>
+                    <a href="index.html">
+                        📖 Solution Repository
+                    </a>
+                </li>
+
+                <li>
+                    <a href="dashboard.html" class="active">
+                        🎫 Ticket Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="raise-ticket.html">
+                        📝 Raise Ticket
+                    </a>
+                </li>
+
+                <li>
+                    <a href="add-solution.html">
+                        ➕ Add Solution
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        📂 Categories
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        📊 Analytics
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        📢 Announcements
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        📝 Feedback Dashboard
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <div class="logout-area">
+
+            <button class="logout-btn">
+                Secure Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <div class="main-content">
+
+        <div class="topbar">
+
+            <div>
+
+                <div class="page-title">
+                    Admin Dashboard
+                </div>
+
+                <div class="page-subtitle">
+                    Knowledge & Support System
+                </div>
+
+            </div>
+
+            <div class="session-box">
+
+                <div class="session-status"></div>
+
+                <div class="session-text">
+                    ACTIVE SESSION
+                </div>
+
+                <div class="session-user" id="sessionUser">
+                    --
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="content-wrapper">
+
+            <!-- HEADING -->
+
+            <div class="dashboard-header">
+
+                <div>
+
+                    <h2>
+                        IT Support Helpdesk
+                    </h2>
+
+                    <p>
+                        Monitor workload, SLA health and ticket activity
+                    </p>
+
+                </div>
+
+                <div class="refresh-info">
+
+                    <div class="time-row">
+                        <strong>Running Time</strong>
+                        <span id="liveTime">--</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- STATS -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <h4>Total Tickets</h4>
+
+                    <h1 id="totalTickets">
+                        -
+                    </h1>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <h4>Open</h4>
+
+                    <h1 id="openTickets">
+                        -
+                    </h1>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <h4>In Progress</h4>
+
+                    <h1 id="inProgressTickets">
+                        -
+                    </h1>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <h4>SLA Breached</h4>
+
+                    <h1 id="slaBreached">
+                        -
+                    </h1>
+
+                </div>
+
+            </div>
+
+            <!-- FILTERS -->
+
+            <div class="card dashboard-filters">
+
+                <select id="statusFilter">
+                    <option value="">
+                        All Statuses
+                    </option>
+                </select>
+
+                <select id="slaFilter">
+                    <option value="">
+                        All SLA States
+                    </option>
+                </select>
+
+                <select id="priorityFilter">
+                    <option value="">
+                        All Priorities
+                    </option>
+                </select>
+
+                <select id="categoryFilter">
+                    <option value="">
+                        All Categories
+                    </option>
+                </select>
+
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <a href="raise-ticket.html" class="btn btn-primary" style="display:inline-block;text-decoration:none;">
+                    + Raise New Ticket
+                </a>
+            </div>
+
+            <!-- TABLE -->
+
+            <div class="card">
+
+                <div class="table-header">
+
+                    <input
+                        type="text"
+                        placeholder="Search tickets..."
+                        id="ticketSearch"
+                    >
+
+                </div>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+                            <th>Status</th>
+                            <th>SLA</th>
+                            <th>Priority</th>
+                            <th>Subject</th>
+                            <th>Category</th>
+                            <th>Raised By</th>
+                            <th>Date Added</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="ticketTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="footer">
+
+            © Developed and Maintained by Database Group
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

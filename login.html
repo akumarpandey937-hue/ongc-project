@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Login — ONGC Support Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
+            background: #8b4fd8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: #222222;
+        }
+
+        .login-shell {
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .login-card {
+            display: flex;
+            width: 100%;
+            min-height: 700px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+        }
+
+        /* —— Left illustration —— */
+        .login-illustration {
+            flex: 1 1 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 32px;
+            background: #ffffff;
+            position: relative;
+        }
+
+        .illustration-stage {
+            position: relative;
+            width: min(100%, 420px);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .illustration-circle {
+            position: absolute;
+            inset: 8%;
+            background: #f2f2f2;
+            border-radius: 50%;
+        }
+
+        .shape {
+            position: absolute;
+            z-index: 2;
+        }
+
+        .shape-circle {
+            width: 44px;
+            height: 44px;
+            border: 3px solid #3b82f6;
+            border-radius: 50%;
+            background: transparent;
+        }
+
+        .shape-circle.sm {
+            width: 28px;
+            height: 28px;
+            border-width: 2px;
+        }
+
+        .shape-triangle {
+            width: 40px;
+            height: 40px;
+            background: center / contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 36'%3E%3Cpolygon points='20,4 36,34 4,34' fill='none' stroke='%2322c55e' stroke-width='3'/%3E%3C/svg%3E");
+        }
+
+        .shape-square {
+            width: 22px;
+            height: 22px;
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+
+        .shape-square.sm {
+            width: 14px;
+            height: 14px;
+        }
+
+        .shape-1 { top: 12%; left: 8%; }
+        .shape-2 { top: 18%; right: 10%; }
+        .shape-3 { bottom: 22%; left: 6%; }
+        .shape-4 { bottom: 14%; right: 12%; }
+        .shape-5 { top: 42%; left: 2%; }
+        .shape-6 { top: 55%; right: 4%; }
+
+        .laptop-wrap {
+            position: relative;
+            z-index: 3;
+            width: 62%;
+            max-width: 280px;
+        }
+
+        .laptop-svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.12));
+        }
+
+        /* —— Right form —— */
+        .login-form-panel {
+            flex: 1 1 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 56px 48px 40px;
+            position: relative;
+        }
+
+        .form-inner {
+            width: 100%;
+            max-width: 340px;
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 36px;
+            color: #222222;
+            letter-spacing: -0.02em;
+        }
+
+        .login-error {
+            display: none;
+            background: #fef2f2;
+            color: #b91c1c;
+            padding: 12px 16px;
+            border-radius: 30px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888888;
+            font-size: 15px;
+            pointer-events: none;
+            transition: color 0.2s ease;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px 16px 52px;
+            border: 2px solid transparent;
+            border-radius: 30px;
+            background: #f2f2f2;
+            font-family: inherit;
+            font-size: 15px;
+            color: #222222;
+            outline: none;
+            transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-group input::placeholder {
+            color: #aaaaaa;
+        }
+
+        .input-group input:focus {
+            background: #ffffff;
+            border-color: #8b4fd8;
+            box-shadow: 0 0 0 4px rgba(139, 79, 216, 0.15);
+        }
+
+        .input-group:focus-within i {
+            color: #8b4fd8;
+        }
+
+        .btn-login {
+            width: 100%;
+            margin-top: 8px;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 30px;
+            background: #6bc04b;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+            box-shadow: 0 4px 14px rgba(107, 192, 75, 0.35);
+        }
+
+        .btn-login:hover {
+            background: #5aad3f;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(107, 192, 75, 0.45);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            font-size: 13px;
+            color: #888888;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .forgot-link:hover {
+            color: #6bc04b;
+        }
+
+        .create-account {
+            position: absolute;
+            bottom: 36px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #888888;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: color 0.2s ease;
+        }
+
+        .create-account:hover {
+            color: #8b4fd8;
+        }
+
+        .demo-hint {
+            margin-top: 14px;
+            text-align: center;
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+
+        /* —— Responsive —— */
+        @media (max-width: 900px) {
+            .login-card {
+                flex-direction: column;
+                min-height: auto;
+            }
+
+            .login-illustration {
+                min-height: 320px;
+                padding: 40px 24px;
+            }
+
+            .illustration-stage {
+                max-width: 300px;
+            }
+
+            .login-form-panel {
+                padding: 40px 32px 80px;
+            }
+
+            .create-account {
+                position: static;
+                transform: none;
+                display: block;
+                text-align: center;
+                margin-top: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .login-card {
+                border-radius: 16px;
+            }
+
+            .form-title {
+                font-size: 24px;
+                margin-bottom: 28px;
+            }
+
+            .login-form-panel {
+                padding: 32px 24px 48px;
+            }
+
+            .form-inner {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-shell">
+        <div class="login-card">
+
+            <section class="login-illustration" aria-hidden="true">
+                <div class="illustration-stage">
+                    <div class="illustration-circle"></div>
+
+                    <span class="shape shape-circle shape-1"></span>
+                    <span class="shape shape-circle sm shape-2"></span>
+                    <span class="shape shape-triangle shape-3"></span>
+                    <span class="shape shape-square shape-4"></span>
+                    <span class="shape shape-square sm shape-5"></span>
+                    <span class="shape shape-circle sm shape-6"></span>
+
+                    <div class="laptop-wrap">
+                        <svg class="laptop-svg" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Computer illustration">
+                            <rect x="48" y="24" width="224" height="148" rx="12" fill="#2d3748"/>
+                            <rect x="56" y="32" width="208" height="124" rx="6" fill="#4a5568"/>
+                            <rect x="64" y="40" width="192" height="108" rx="4" fill="#63b3ed"/>
+                            <rect x="72" y="52" width="80" height="8" rx="2" fill="#bee3f8" opacity="0.9"/>
+                            <rect x="72" y="68" width="120" height="6" rx="2" fill="#bee3f8" opacity="0.6"/>
+                            <rect x="72" y="82" width="100" height="6" rx="2" fill="#bee3f8" opacity="0.6"/>
+                            <rect x="72" y="96" width="140" height="6" rx="2" fill="#bee3f8" opacity="0.5"/>
+                            <path d="M24 172 H296 L280 196 H40 L24 172 Z" fill="#1a202c"/>
+                            <rect x="120" y="196" width="80" height="8" rx="2" fill="#2d3748"/>
+                            <ellipse cx="160" cy="210" rx="100" ry="8" fill="#000" opacity="0.08"/>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <section class="login-form-panel">
+                <div class="form-inner">
+                    <h1 class="form-title">Member Login</h1>
+
+                    <div id="loginError" class="login-error" role="alert"></div>
+
+                    <form id="loginForm" novalidate>
+                        <div class="input-group">
+                            <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Email address"
+                                required
+                                autocomplete="username"
+                            >
+                        </div>
+
+                        <div class="input-group">
+                            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Password"
+                                required
+                                autocomplete="current-password"
+                            >
+                        </div>
+
+                        <button type="submit" class="btn-login">Login</button>
+                    </form>
+
+                    <a href="#" class="forgot-link" id="forgotLink">Forgot Username / Password?</a>
+                    <p class="demo-hint">Demo: admin / admin123</p>
+                </div>
+
+                <a href="#" class="create-account" id="createAccountLink">Create your Account &rarr;</a>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const loginForm = document.getElementById("loginForm");
+            const loginError = document.getElementById("loginError");
+            const forgotLink = document.getElementById("forgotLink");
+            const createLink = document.getElementById("createAccountLink");
+
+            if (localStorage.getItem("loggedIn") === "true") {
+                window.location.href = "dashboard.html";
+                return;
+            }
+
+            function showError(message) {
+                if (!loginError) return;
+                loginError.textContent = message;
+                loginError.style.display = "block";
+            }
+
+            function hideError() {
+                if (!loginError) return;
+                loginError.style.display = "none";
+                loginError.textContent = "";
+            }
+
+            if (loginForm) {
+                loginForm.addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    hideError();
+
+                    const username = document.getElementById("username").value.trim();
+                    const password = document.getElementById("password").value;
+
+                    if (username === "admin" && password === "admin123") {
+                        localStorage.setItem("loggedIn", "true");
+                        localStorage.setItem("username", username);
+                        window.location.href = "dashboard.html";
+                    } else {
+                        showError("Invalid username or password");
+                    }
+                });
+
+                loginForm.querySelectorAll("input").forEach(function (input) {
+                    input.addEventListener("input", hideError);
+                });
+            }
+
+            [forgotLink, createLink].forEach(function (link) {
+                if (!link) return;
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

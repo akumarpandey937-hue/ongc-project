@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Solution</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/add-solution.css">
+</head>
+<body>
+
+<div class="app-container">
+
+    <aside class="sidebar">
+        <div class="logo-section">
+            <img src="assets/icons/logo.webp" alt="logo">
+            <div class="logo-title">Ongc Support Portal</div>
+            <div class="logo-subtitle">Operations Workspace</div>
+        </div>
+
+        <div class="sidebar-menu">
+            <ul>
+                <li><a href="index.html">📖 Solution Repository</a></li>
+                <li><a href="dashboard.html">🎫 Ticket Dashboard</a></li>
+                <li><a href="raise-ticket.html">📝 Raise Ticket</a></li>
+                <li><a href="add-solution.html" class="active">➕ Add Solution</a></li>
+            </ul>
+        </div>
+
+        <div class="logout-area">
+            <button class="logout-btn" type="button">Secure Logout</button>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <div class="topbar">
+            <div>
+                <div class="page-title">Add Solution</div>
+                <div class="page-subtitle">Publish to the knowledge base</div>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="ticket-container">
+
+                <h2>New Knowledge Base Article</h2>
+
+                <div class="form-group">
+                    <label for="solutionTitle">Issue Title</label>
+                    <input type="text" id="solutionTitle" placeholder="e.g. Reset network adapter">
+                </div>
+
+                <div class="form-group">
+                    <label for="solutionCategory">Category</label>
+                    <select id="solutionCategory">
+                        <option value="">Select Category</option>
+                        <option>Network</option>
+                        <option>Hardware</option>
+                        <option>IT</option>
+                        <option>Application</option>
+                        <option>Database</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="solutionPreview">Solution Preview / Steps</label>
+                    <textarea id="solutionPreview" rows="8" placeholder="Describe the fix or troubleshooting steps..."></textarea>
+                </div>
+
+                <div class="btns">
+                    <button type="button" class="cancel-btn" onclick="window.location.href='index.html'">Cancel</button>
+                    <button type="button" class="submit-btn" onclick="submitSolution()">Publish Solution</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">© Developed and Maintained by Database Group</div>
+    </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/solution.js"></script>
+
+</body>
+</html>

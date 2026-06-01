@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raise Ticket</title>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/add-solution.css">
+</head>
+<body>
+
+<div class="app-container">
+
+    <aside class="sidebar">
+        <div class="logo-section">
+            <img src="assets/icons/logo.webp" alt="logo">
+            <div class="logo-title">Ongc Support Portal</div>
+            <div class="logo-subtitle">Operations Workspace</div>
+        </div>
+
+        <div class="sidebar-menu">
+            <ul>
+                <li><a href="index.html">📖 Solution Repository</a></li>
+                <li><a href="dashboard.html">🎫 Ticket Dashboard</a></li>
+                <li><a href="raise-ticket.html" class="active">📝 Raise Ticket</a></li>
+                <li><a href="add-solution.html">➕ Add Solution</a></li>
+            </ul>
+        </div>
+
+        <div class="logout-area">
+            <button class="logout-btn" type="button">Secure Logout</button>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <div class="topbar">
+            <div>
+                <div class="page-title">Raise Ticket</div>
+                <div class="page-subtitle">Submit a new support request</div>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="ticket-container">
+
+                <h2>Submit a New Request</h2>
+
+                <div class="form-group">
+                    <label for="ticketSubject">Issue Subject</label>
+                    <input type="text" id="ticketSubject" placeholder="e.g. VPN connection failure">
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="ticketCategory">Category</label>
+                        <select id="ticketCategory">
+                            <option value="">Select Category</option>
+                            <option>IT</option>
+                            <option>Network</option>
+                            <option>Hardware</option>
+                            <option>Application</option>
+                            <option>Database</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ticketPriority">Priority</label>
+                        <select id="ticketPriority">
+                            <option>Low</option>
+                            <option selected>Medium</option>
+                            <option>High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <div id="editor">
+                        <p>Please describe the issue in detail...</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fileUpload">Attach Screenshot or Log File</label>
+                    <input type="file" id="fileUpload">
+                    <small>Allowed formats: JPG, PNG, PDF, DOCX, TXT</small>
+                </div>
+
+                <div class="btns">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="button" class="submit-btn" onclick="submitTicket()">Submit Ticket</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">© Developed and Maintained by Database Group</div>
+    </div>
+</div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/solution.js"></script>
+
+</body>
+</html>
