@@ -25,7 +25,6 @@
         <div class="user-box">
             <h4>CURRENT USER</h4>
             <div class="user-info">
-                <span>👤</span>
                 <span id="userName"></span>
             </div>
         </div>
@@ -71,9 +70,29 @@
                 <p>Knowledge & Support System</p>
             </div>
 
-            <div class="session-box">
-                <span class="online-dot"></span>
-                ACTIVE SESSION
+            <div class="user-profile-menu">
+                <button class="profile-trigger" id="profileTrigger" aria-label="User Profile">
+                    <span class="avatar-circle" id="avatarCircle">--</span>
+                    <span class="status-indicator online"></span>
+                </button>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-avatar" id="dropdownAvatar">--</div>
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-username" id="dropdownUsername">--</div>
+                            <div class="dropdown-role" id="dropdownRole">--</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-menu-list">
+                        <button class="dropdown-item" id="viewDetailsBtn">
+                            Account Details
+                        </button>
+                        <button class="dropdown-item logout-item" id="dropdownLogoutBtn">
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
             </div>
 
         </header>

@@ -20,10 +20,10 @@
 
         <div class="sidebar-menu">
             <ul>
-                <li><a href="index.html">📖 Solution Repository</a></li>
-                <li><a href="dashboard.html">🎫 Ticket Dashboard</a></li>
-                <li><a href="raise-ticket.html">📝 Raise Ticket</a></li>
-                <li><a href="add-solution.html" class="active">➕ Add Solution</a></li>
+                <li><a href="index.html">Solution Repository</a></li>
+                <li><a href="dashboard.html">Ticket Dashboard</a></li>
+                <li><a href="raise-ticket.html">Raise Ticket</a></li>
+                <li><a href="add-solution.html" class="active">Add Solution</a></li>
             </ul>
         </div>
 
@@ -37,6 +37,30 @@
             <div>
                 <div class="page-title">Add Solution</div>
                 <div class="page-subtitle">Publish to the knowledge base</div>
+            </div>
+            <div class="user-profile-menu">
+                <button class="profile-trigger" id="profileTrigger" aria-label="User Profile">
+                    <span class="avatar-circle" id="avatarCircle">--</span>
+                    <span class="status-indicator online"></span>
+                </button>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-avatar" id="dropdownAvatar">--</div>
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-username" id="dropdownUsername">--</div>
+                            <div class="dropdown-role" id="dropdownRole">--</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-menu-list">
+                        <button class="dropdown-item" id="viewDetailsBtn">
+                            Account Details
+                        </button>
+                        <button class="dropdown-item logout-item" id="dropdownLogoutBtn">
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (username === "admin" && password === "admin123") {
             localStorage.setItem("loggedIn", "true");
             localStorage.setItem("username", username);
+            localStorage.setItem("loginTime", new Date().toLocaleString());
             window.location.href = "dashboard.html";
         } else {
             const errorEl = document.getElementById("loginError");
@@ -29,5 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
 function logout() {
     localStorage.removeItem("loggedIn");
     localStorage.removeItem("username");
+    localStorage.removeItem("loginTime");
     window.location.href = "login.html";
 }
