@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "category": "Network",
+    "category": "GEOTOMO",
     "title": "Internet Not Working",
     "preview": "Restart router and check cable connection.",
     "author": "Admin",
@@ -9,7 +9,7 @@
   },
   {
     "id": 2,
-    "category": "Hardware",
+    "category": "OMEGA",
     "title": "Printer Offline",
     "preview": "Reconnect printer and restart spooler service.",
     "author": "Support Team",

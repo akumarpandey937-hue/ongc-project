@@ -5,7 +5,7 @@
     "sla": "Within SLA",
     "priority": "High",
     "subject": "Email Not Working",
-    "category": "IT",
+    "category": "PARADIGM",
     "raisedBy": "Ashutosh",
     "createdAt": "2025-05-20"
   },
@@ -15,7 +15,7 @@
     "sla": "Near Breach",
     "priority": "Medium",
     "subject": "Printer Issue",
-    "category": "Hardware",
+    "category": "OMEGA",
     "raisedBy": "Admin",
     "createdAt": "2025-05-21"
   },
@@ -25,7 +25,7 @@
     "sla": "Resolved",
     "priority": "Low",
     "subject": "Software Installation",
-    "category": "Application",
+    "category": "CGG",
     "raisedBy": "User1",
     "createdAt": "2025-05-22"
   },
@@ -35,7 +35,7 @@
     "sla": "Within SLA",
     "priority": "High",
     "subject": "Internet Issue",
-    "category": "Network",
+    "category": "GEOTOMO",
     "raisedBy": "Ashutosh",
     "createdAt": "31/5/2026"
   },
@@ -45,7 +45,7 @@
     "sla": "Within SLA",
     "priority": "High",
     "subject": "Internet Issue",
-    "category": "Network",
+    "category": "GEOTOMO",
     "raisedBy": "Ashutosh",
     "createdAt": "31/5/2026"
   }

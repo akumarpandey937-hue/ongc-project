@@ -36,7 +36,7 @@ async function loadSolutions() {
         console.error("Failed to load solutions:", error);
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" style="text-align:center;padding:20px;">
+                <td colspan="5" style="text-align:center;padding:20px;">
                     Could not load solutions. Is the backend running on port 5000?
                 </td>
             </tr>
@@ -53,7 +53,7 @@ function renderSolutions(solutions) {
     if (!solutions || solutions.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" style="text-align:center;padding:20px;">
+                <td colspan="5" style="text-align:center;padding:20px;">
                     No solutions found
                 </td>
             </tr>
@@ -70,8 +70,6 @@ function renderSolutions(solutions) {
             </td>
             <td>${escapeHtml(solution.title)}</td>
             <td>${escapeHtml(solution.preview || "")}</td>
-            <td>${escapeHtml(solution.author || "-")}</td>
-            <td>${solution.date || "-"}</td>
             <td>
                 <button class="open-btn" data-id="${solution.id}">
                     Open
