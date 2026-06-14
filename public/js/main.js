@@ -10,16 +10,33 @@ function requireAuth() {
     const page = getCurrentPage();
     const isLoggedIn =
         localStorage.getItem("loggedIn") === "true";
+    const role = localStorage.getItem("role") || "admin";
 
     if (PUBLIC_PAGES.includes(page)) {
         if (isLoggedIn) {
-            window.location.href = "dashboard.html";
+            if (role === "admin") {
+                window.location.href = "dashboard.html";
+            } else {
+                window.location.href = "user-dashboard.html";
+            }
         }
         return;
     }
 
     if (!isLoggedIn) {
         window.location.href = "login.html";
+        return;
+    }
+
+    // Protect routes based on role
+    if (role === "user") {
+        if (page === "dashboard.html" || page === "add-solution.html") {
+            window.location.href = "user-dashboard.html";
+        }
+    } else if (role === "admin") {
+        if (page === "user-dashboard.html") {
+            window.location.href = "dashboard.html";
+        }
     }
 }
 
@@ -27,7 +44,8 @@ requireAuth();
 
 document.addEventListener("DOMContentLoaded", () => {
     const username =
-        localStorage.getItem("username") || "admin";
+        localStorage.getItem("username") || "Admin";
+    const role = localStorage.getItem("role") || "admin";
 
     const userId = document.getElementById("userId");
     const sessionUser = document.getElementById("sessionUser");
@@ -36,6 +54,61 @@ document.addEventListener("DOMContentLoaded", () => {
     if (userId) userId.textContent = username;
     if (sessionUser) sessionUser.textContent = username;
     if (userName) userName.textContent = username;
+
+    const userRoleEl = document.querySelector(".user-section .user-role") || document.getElementById("userRole");
+    if (userRoleEl) {
+        userRoleEl.textContent = role === "admin" ? "Admin" : "User";
+    }
+
+    // Rebuild sidebar dynamically based on user role
+    const sidebarMenu = document.querySelector(".sidebar-menu ul");
+    if (sidebarMenu) {
+        const currentPage = getCurrentPage();
+        if (role === "admin") {
+            sidebarMenu.innerHTML = `
+                <li><a href="index.html" class="${currentPage === "index.html" ? "active" : ""}">Solution Repository</a></li>
+                <li><a href="dashboard.html" class="${currentPage === "dashboard.html" ? "active" : ""}">Ticket Dashboard</a></li>
+                <li><a href="raise-ticket.html" class="${currentPage === "raise-ticket.html" ? "active" : ""}">Raise Ticket</a></li>
+                <li><a href="add-solution.html" class="${currentPage === "add-solution.html" ? "active" : ""}">Add Solution</a></li>
+            `;
+        } else {
+            sidebarMenu.innerHTML = `
+                <li><a href="index.html" class="${currentPage === "index.html" ? "active" : ""}">Solution Repository</a></li>
+                <li><a href="user-dashboard.html" class="${currentPage === "user-dashboard.html" ? "active" : ""}">My Tickets</a></li>
+                <li><a href="raise-ticket.html" class="${currentPage === "raise-ticket.html" ? "active" : ""}">Raise Ticket</a></li>
+            `;
+        }
+    }
+
+    // Inject Home Button in topbar next to user profile menu
+    const profileMenu = document.querySelector(".user-profile-menu");
+    if (profileMenu) {
+        // Ensure no duplicate home button is inserted
+        if (!document.getElementById("topbarHomeBtn")) {
+            const homeBtn = document.createElement("a");
+            homeBtn.id = "topbarHomeBtn";
+            homeBtn.href = role === "admin" ? "dashboard.html" : "user-dashboard.html";
+            homeBtn.className = "btn btn-secondary";
+            homeBtn.style.marginRight = "15px";
+            homeBtn.style.padding = "8px 14px";
+            homeBtn.style.display = "inline-flex";
+            homeBtn.style.alignItems = "center";
+            homeBtn.style.gap = "8px";
+            homeBtn.style.textDecoration = "none";
+            homeBtn.style.fontSize = "13px";
+            homeBtn.style.borderRadius = "8px";
+            homeBtn.style.fontWeight = "600";
+            homeBtn.style.border = "1px solid #e5e7eb";
+            homeBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: middle;">
+                    <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
+                    <path d="m8 3.293 6 6V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V9.293l6-6Z"/>
+                </svg>
+                Home
+            `;
+            profileMenu.parentNode.insertBefore(homeBtn, profileMenu);
+        }
+    }
 
     document
         .querySelectorAll(".logout-btn, #logoutBtn")
@@ -70,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (dropdownAvatar) dropdownAvatar.textContent = initials;
         if (dropdownUsername) dropdownUsername.textContent = username;
         if (dropdownRole) {
-            dropdownRole.textContent = username.toLowerCase() === "admin" ? "System Administrator" : "Portal User";
+            dropdownRole.textContent = role === "admin" ? "System Administrator" : "Portal User";
         }
 
         // Toggle dropdown
@@ -117,7 +190,7 @@ function showAccountDetailsModal(username) {
         ? (parts[0][0] + parts[1][0]).toUpperCase() 
         : username.substring(0, Math.min(username.length, 2)).toUpperCase();
 
-    const role = username.toLowerCase() === "admin" ? "System Administrator" : "Portal User";
+    const role = (localStorage.getItem("role") || "admin") === "admin" ? "System Administrator" : "Portal User";
     const status = "Active";
     
     let loginTime = localStorage.getItem("loginTime");
@@ -216,5 +289,6 @@ function logout() {
     localStorage.removeItem("loggedIn");
     localStorage.removeItem("username");
     localStorage.removeItem("loginTime");
+    localStorage.removeItem("role");
     window.location.href = "login.html";
 }

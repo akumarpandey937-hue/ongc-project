@@ -18,7 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const cancelBtn = document.querySelector(".cancel-btn");
     if (cancelBtn) {
         cancelBtn.addEventListener("click", () => {
-            window.location.href = "dashboard.html";
+            const role = localStorage.getItem("role") || "admin";
+            if (role === "admin") {
+                window.location.href = "dashboard.html";
+            } else {
+                window.location.href = "user-dashboard.html";
+            }
         });
     }
 });
@@ -53,7 +58,12 @@ async function submitTicket() {
         });
 
         alert(result.message || "Ticket submitted successfully.");
-        window.location.href = "dashboard.html";
+        const role = localStorage.getItem("role") || "admin";
+        if (role === "admin") {
+            window.location.href = "dashboard.html";
+        } else {
+            window.location.href = "user-dashboard.html";
+        }
     } catch (error) {
         console.error(error);
         alert(

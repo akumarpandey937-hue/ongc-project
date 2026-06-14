@@ -48,5 +48,17 @@
     "category": "GEOTOMO",
     "raisedBy": "Ashutosh",
     "createdAt": "31/5/2026"
+  },
+  {
+    "id": 1781460140499,
+    "status": "Resolved",
+    "sla": "Within SLA",
+    "priority": "High",
+    "subject": "My laptop not working",
+    "category": "LINUX",
+    "raisedBy": "User",
+    "description": "<p>nahi chal rha laptop<strong> aake theek karo<span class=\"ql-cursor\">﻿</span></strong></p>",
+    "createdAt": "2026-06-14",
+    "reply": "nahi ayenge"
   }
 ]

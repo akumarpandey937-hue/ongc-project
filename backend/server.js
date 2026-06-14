@@ -1,19 +1,23 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const dashboardRoutes =
-require("./routes/dashboardRoutes");
+    require("./routes/dashboardRoutes");
 
 const ticketRoutes =
-require("./routes/ticketRoutes");
+    require("./routes/ticketRoutes");
 
 const solutionRoutes =
-require("./routes/solutionRoutes");
+    require("./routes/solutionRoutes");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static frontend files from parent public directory
+app.use(express.static(path.join(__dirname, "../public")));
 
 app.use(
     "/api/dashboard",
@@ -31,9 +35,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-    res.send(
-        "ONGC Support Portal API Running"
-    );
+    res.sendFile(path.join(__dirname, "../public/login.html"));
 });
 
 const PORT = 5000;

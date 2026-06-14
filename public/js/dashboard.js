@@ -40,7 +40,6 @@ async function initializeDashboard() {
             "inProgressTickets",
             stats.inProgressTickets || stats.inProgress || 0
         );
-        setText("slaBreached", stats.slaBreached);
 
         allTickets = await getTickets();
         populateFilters(allTickets);
@@ -51,7 +50,7 @@ async function initializeDashboard() {
         if (tableBody) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="8" style="text-align:center;padding:20px;">
+                    <td colspan="6" style="text-align:center;padding:20px;">
                         Could not load dashboard. Start the backend: cd backend && npm start
                     </td>
                 </tr>
@@ -67,7 +66,6 @@ function setText(id, value) {
 
 function populateFilters(tickets) {
     fillSelect("statusFilter", uniqueValues(tickets, "status"));
-    fillSelect("slaFilter", uniqueValues(tickets, "sla"));
     fillSelect("priorityFilter", uniqueValues(tickets, "priority"));
     fillSelect("categoryFilter", uniqueValues(tickets, "category"));
 }
@@ -95,7 +93,6 @@ function fillSelect(id, values) {
 function bindFilters() {
     const filterIds = [
         "statusFilter",
-        "slaFilter",
         "priorityFilter",
         "categoryFilter"
     ];
@@ -111,7 +108,6 @@ function bindFilters() {
 
 function applyFilters() {
     const status = document.getElementById("statusFilter")?.value || "";
-    const sla = document.getElementById("slaFilter")?.value || "";
     const priority =
         document.getElementById("priorityFilter")?.value || "";
     const category =
@@ -122,7 +118,6 @@ function applyFilters() {
 
     const filtered = allTickets.filter((ticket) => {
         if (status && ticket.status !== status) return false;
-        if (sla && ticket.sla !== sla) return false;
         if (priority && ticket.priority !== priority) return false;
         if (category && ticket.category !== category) return false;
 
@@ -130,12 +125,9 @@ function applyFilters() {
             const haystack = [
                 ticket.id,
                 ticket.status,
-                ticket.sla,
                 ticket.priority,
                 ticket.subject,
-                ticket.category,
-                ticket.raisedBy,
-                ticket.createdAt
+                ticket.category
             ]
                 .join(" ")
                 .toLowerCase();
@@ -157,7 +149,7 @@ function renderTickets(tickets) {
     if (!tickets || tickets.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="8" style="text-align:center;padding:20px;">
+                <td colspan="6" style="text-align:center;padding:20px;">
                     No tickets found
                 </td>
             </tr>
@@ -167,18 +159,19 @@ function renderTickets(tickets) {
 
     tickets.forEach((ticket) => {
         const statusClass = getStatusClass(ticket.status);
-        const slaClass = getSlaClass(ticket.sla);
 
         tableBody.innerHTML += `
             <tr>
                 <td>#${ticket.id}</td>
                 <td><span class="badge ${statusClass}">${ticket.status || "-"}</span></td>
-                <td><span class="badge ${slaClass}">${ticket.sla || "-"}</span></td>
                 <td>${ticket.priority || "-"}</td>
                 <td>${escapeHtml(ticket.subject || "-")}</td>
                 <td>${ticket.category || "-"}</td>
-                <td>${ticket.raisedBy || "-"}</td>
-                <td>${ticket.createdAt || "-"}</td>
+                <td>
+                    <a href="ticket-details.html?id=${ticket.id}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px; text-decoration: none;">
+                        View & Reply
+                    </a>
+                </td>
             </tr>
         `;
     });

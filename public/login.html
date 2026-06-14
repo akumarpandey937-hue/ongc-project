@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
     <style>
         *,
         *::before,
@@ -107,12 +109,35 @@
             height: 14px;
         }
 
-        .shape-1 { top: 12%; left: 8%; }
-        .shape-2 { top: 18%; right: 10%; }
-        .shape-3 { bottom: 22%; left: 6%; }
-        .shape-4 { bottom: 14%; right: 12%; }
-        .shape-5 { top: 42%; left: 2%; }
-        .shape-6 { top: 55%; right: 4%; }
+        .shape-1 {
+            top: 12%;
+            left: 8%;
+        }
+
+        .shape-2 {
+            top: 18%;
+            right: 10%;
+        }
+
+        .shape-3 {
+            bottom: 22%;
+            left: 6%;
+        }
+
+        .shape-4 {
+            bottom: 14%;
+            right: 12%;
+        }
+
+        .shape-5 {
+            top: 42%;
+            left: 2%;
+        }
+
+        .shape-6 {
+            top: 55%;
+            right: 4%;
+        }
 
         .laptop-wrap {
             position: relative;
@@ -325,6 +350,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="login-shell">
@@ -342,17 +368,18 @@
                     <span class="shape shape-circle sm shape-6"></span>
 
                     <div class="laptop-wrap">
-                        <svg class="laptop-svg" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Computer illustration">
-                            <rect x="48" y="24" width="224" height="148" rx="12" fill="#2d3748"/>
-                            <rect x="56" y="32" width="208" height="124" rx="6" fill="#4a5568"/>
-                            <rect x="64" y="40" width="192" height="108" rx="4" fill="#63b3ed"/>
-                            <rect x="72" y="52" width="80" height="8" rx="2" fill="#bee3f8" opacity="0.9"/>
-                            <rect x="72" y="68" width="120" height="6" rx="2" fill="#bee3f8" opacity="0.6"/>
-                            <rect x="72" y="82" width="100" height="6" rx="2" fill="#bee3f8" opacity="0.6"/>
-                            <rect x="72" y="96" width="140" height="6" rx="2" fill="#bee3f8" opacity="0.5"/>
-                            <path d="M24 172 H296 L280 196 H40 L24 172 Z" fill="#1a202c"/>
-                            <rect x="120" y="196" width="80" height="8" rx="2" fill="#2d3748"/>
-                            <ellipse cx="160" cy="210" rx="100" ry="8" fill="#000" opacity="0.08"/>
+                        <svg class="laptop-svg" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            role="img" aria-label="Computer illustration">
+                            <rect x="48" y="24" width="224" height="148" rx="12" fill="#2d3748" />
+                            <rect x="56" y="32" width="208" height="124" rx="6" fill="#4a5568" />
+                            <rect x="64" y="40" width="192" height="108" rx="4" fill="#63b3ed" />
+                            <rect x="72" y="52" width="80" height="8" rx="2" fill="#bee3f8" opacity="0.9" />
+                            <rect x="72" y="68" width="120" height="6" rx="2" fill="#bee3f8" opacity="0.6" />
+                            <rect x="72" y="82" width="100" height="6" rx="2" fill="#bee3f8" opacity="0.6" />
+                            <rect x="72" y="96" width="140" height="6" rx="2" fill="#bee3f8" opacity="0.5" />
+                            <path d="M24 172 H296 L280 196 H40 L24 172 Z" fill="#1a202c" />
+                            <rect x="120" y="196" width="80" height="8" rx="2" fill="#2d3748" />
+                            <ellipse cx="160" cy="210" rx="100" ry="8" fill="#000" opacity="0.08" />
                         </svg>
                     </div>
                 </div>
@@ -367,33 +394,21 @@
                     <form id="loginForm" novalidate>
                         <div class="input-group">
                             <i class="fa-regular fa-envelope" aria-hidden="true"></i>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                placeholder="Email address"
-                                required
-                                autocomplete="username"
-                            >
+                            <input type="text" id="username" name="username" placeholder="Email address" required
+                                autocomplete="username">
                         </div>
 
                         <div class="input-group">
                             <i class="fa-solid fa-lock" aria-hidden="true"></i>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                placeholder="Password"
-                                required
-                                autocomplete="current-password"
-                            >
+                            <input type="password" id="password" name="password" placeholder="Password" required
+                                autocomplete="current-password">
                         </div>
 
                         <button type="submit" class="btn-login">Login</button>
                     </form>
 
                     <a href="#" class="forgot-link" id="forgotLink">Forgot Username / Password?</a>
-                    <p class="demo-hint">Demo: admin / admin123</p>
+                    <p class="demo-hint">Demo Admin: admin / admin123 | Demo User: user / user123</p>
                 </div>
 
                 <a href="#" class="create-account" id="createAccountLink">Create your Account &rarr;</a>
@@ -410,7 +425,12 @@
             const createLink = document.getElementById("createAccountLink");
 
             if (localStorage.getItem("loggedIn") === "true") {
-                window.location.href = "dashboard.html";
+                const role = localStorage.getItem("role") || "admin";
+                if (role === "admin") {
+                    window.location.href = "dashboard.html";
+                } else {
+                    window.location.href = "user-dashboard.html";
+                }
                 return;
             }
 
@@ -436,10 +456,16 @@
 
                     if (username === "admin" && password === "admin123") {
                         localStorage.setItem("loggedIn", "true");
-                        localStorage.setItem("username", username);
+                        localStorage.setItem("username", "Admin");
+                        localStorage.setItem("role", "admin");
                         window.location.href = "dashboard.html";
+                    } else if (username.toLowerCase() === "user" && password === "user123") {
+                        localStorage.setItem("loggedIn", "true");
+                        localStorage.setItem("username", "User");
+                        localStorage.setItem("role", "user");
+                        window.location.href = "user-dashboard.html";
                     } else {
-                        showError("Invalid username or password");
+                        showError("Invalid username or password. Try admin/admin123 or user/user123");
                     }
                 });
 
@@ -457,4 +483,5 @@
         })();
     </script>
 </body>
+
 </html>
