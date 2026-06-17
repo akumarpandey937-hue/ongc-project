@@ -1,0 +1,17 @@
+[
+  {
+    "username": "admin",
+    "passwordHash": "$2b$10$Whns3HrOEjv0hXrZ0Tj31u09To94mmNPaF7LIpSMYJ18z8MgGXu5W",
+    "role": "admin"
+  },
+  {
+    "username": "user",
+    "passwordHash": "$2b$10$p/tTPkilLEch6.7ddDKsle5aMOgui/XtOTiTI439NOpj026Bv0Za6",
+    "role": "user"
+  },
+  {
+    "username": "vansh",
+    "passwordHash": "$2b$10$8TIum4sSd9fYAi4yrHzuQOLMsg7AfWtoBsMhpWZKuFdpy/cMSQSfy",
+    "role": "user"
+  }
+]

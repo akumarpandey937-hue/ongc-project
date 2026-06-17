@@ -1,13 +1,30 @@
 const API_BASE_URL = "http://localhost:5000/api";
 
 async function apiRequest(path, options = {}) {
+    const token = localStorage.getItem("token");
+    const headers = {
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+    };
+
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+    }
+
     const response = await fetch(`${API_BASE_URL}${path}`, {
-        headers: {
-            "Content-Type": "application/json",
-            ...(options.headers || {})
-        },
+        headers,
         ...options
     });
+
+    if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("loggedIn");
+        localStorage.removeItem("username");
+        localStorage.removeItem("loginTime");
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+        throw new Error("Session expired. Please log in again.");
+    }
 
     const data = await response.json().catch(() => ({}));
 

@@ -2,14 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
-const dashboardRoutes =
-    require("./routes/dashboardRoutes");
-
-const ticketRoutes =
-    require("./routes/ticketRoutes");
-
-const solutionRoutes =
-    require("./routes/solutionRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const ticketRoutes = require("./routes/ticketRoutes");
+const solutionRoutes = require("./routes/solutionRoutes");
+const authRoutes = require("./routes/authRoutes");
+const authMiddleware = require("./middleware/auth");
 
 const app = express();
 
@@ -19,20 +16,13 @@ app.use(express.json());
 // Serve static frontend files from parent public directory
 app.use(express.static(path.join(__dirname, "../public")));
 
-app.use(
-    "/api/dashboard",
-    dashboardRoutes
-);
+// Public Auth Routes
+app.use("/api/auth", authRoutes);
 
-app.use(
-    "/api/tickets",
-    ticketRoutes
-);
-
-app.use(
-    "/api/solutions",
-    solutionRoutes
-);
+// Protected API Routes
+app.use("/api/dashboard", authMiddleware, dashboardRoutes);
+app.use("/api/tickets", authMiddleware, ticketRoutes);
+app.use("/api/solutions", authMiddleware, solutionRoutes);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../public/login.html"));
