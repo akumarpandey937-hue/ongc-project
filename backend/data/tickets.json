@@ -60,5 +60,16 @@
     "description": "<p>nahi chal rha laptop<strong> aake theek karo<span class=\"ql-cursor\">﻿</span></strong></p>",
     "createdAt": "2026-06-14",
     "reply": "nahi ayenge"
+  },
+  {
+    "id": 1781763255953,
+    "status": "Open",
+    "sla": "Within SLA",
+    "priority": "Medium",
+    "subject": "how to add hostname in linux?",
+    "category": "LINUX",
+    "raisedBy": "admin",
+    "description": "<p>To add <strong>hostname </strong>we need to <u>use </u><em>command </em><strong>hostanamectl</strong></p>",
+    "createdAt": "2026-06-18"
   }
 ]
