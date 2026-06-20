@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Knowledge Base</title>
+    <title>Knowledge Hub</title>
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/ticket.css">
@@ -35,27 +35,7 @@
 
         </div>
 
-        <!-- USER -->
 
-        <div class="user-section">
-
-            <div class="user-label">
-                CURRENT USER
-            </div>
-
-            <div class="user-info">
-
-                <div class="user-id" id="userId">
-                    --
-                </div>
-
-                <div class="user-role" id="userRole">
-                    Admin
-                </div>
-
-            </div>
-
-        </div>
 
         <!-- MENU -->
 
@@ -65,7 +45,7 @@
 
                 <li>
                     <a href="index.html" class="active">
-                        Solution Repository
+                        Knowledge Hub
                     </a>
                 </li>
 
@@ -119,11 +99,11 @@
             <div>
 
                 <div class="page-title">
-                    Knowledge Base
+                    Knowledge Hub
                 </div>
 
                 <div class="page-subtitle">
-                    Knowledge & Support System
+                    Centralized Knowledge Hub & Support System
                 </div>
 
             </div>
@@ -159,16 +139,32 @@
 
         <div class="content-wrapper">
 
-            <!-- SEARCH -->
-
-            <div class="knowledge-toolbar">
-
-                <input
-                    type="text"
-                    id="solutionSearch"
-                    placeholder="Search solution..."
-                >
-
+            <!-- KNOWLEDGE HUB TOOLBAR -->
+            <div class="knowledge-hub-toolbar">
+                <div class="category-tabs" id="categoryTabs">
+                    <button class="category-tab active" data-category="All">All Systems</button>
+                    <button class="category-tab" data-category="GEOTOMO">GEOTOMO</button>
+                    <button class="category-tab" data-category="OMEGA">OMEGA</button>
+                    <button class="category-tab" data-category="PARADIGM">PARADIGM</button>
+                    <button class="category-tab" data-category="CGG">CGG</button>
+                    <button class="category-tab" data-category="LINUX">LINUX</button>
+                    <button class="category-tab" data-category="SCUBE">SCUBE</button>
+                    <button class="category-tab" data-category="SHARP REFLECTION">SHARP REFLECTION</button>
+                </div>
+                <div class="toolbar-right">
+                    <input
+                        type="text"
+                        id="solutionSearch"
+                        placeholder="Search articles..."
+                        class="search-input-small"
+                    >
+                    <a href="add-solution.html" class="btn-add-solution" id="addSolutionBtn" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: middle;">
+                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                        </svg>
+                        Publish Solution
+                    </a>
+                </div>
             </div>
 
             <!-- TABLE -->

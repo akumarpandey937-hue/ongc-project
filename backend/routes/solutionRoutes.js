@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const authMiddleware = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -36,11 +37,13 @@ router.get("/:id", (req, res) => {
     res.json(solution);
 });
 
-router.post("/", (req, res) => {
+router.post("/", authMiddleware, (req, res) => {
     const solutions = loadSolutions();
 
+    const nextId = solutions.length ? Math.max(...solutions.map(s => Number(s.id))) + 1 : 1;
+
     const newSolution = {
-        id: Date.now(),
+        id: nextId,
         category: req.body.category || "General",
         title: req.body.title || "Untitled",
         preview: req.body.preview || "",
@@ -57,7 +60,7 @@ router.post("/", (req, res) => {
     });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", authMiddleware, (req, res) => {
     const solutions = loadSolutions();
     const updated = solutions.filter(
         (s) => s.id != req.params.id

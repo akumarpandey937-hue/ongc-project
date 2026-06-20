@@ -113,9 +113,20 @@ router.patch("/:id", (req, res) => {
         });
     }
 
+    const prevStatus = tickets[index].status;
+    const newStatus = req.body.status;
+    let resolvedAt = tickets[index].resolvedAt || "-";
+
+    if ((newStatus === "Resolved" || newStatus === "Closed") && (prevStatus !== "Resolved" && prevStatus !== "Closed")) {
+        resolvedAt = new Date().toISOString().slice(0, 10);
+    } else if (newStatus && newStatus !== "Resolved" && newStatus !== "Closed") {
+        resolvedAt = "-";
+    }
+
     tickets[index] = {
         ...tickets[index],
         ...req.body,
+        resolvedAt: req.body.resolvedAt || resolvedAt,
         id: tickets[index].id
     };
 

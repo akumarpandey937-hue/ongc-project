@@ -1,29 +1,62 @@
 let allSolutions = [];
+let selectedCategory = "All";
+let searchQuery = "";
 
 document.addEventListener("DOMContentLoaded", () => {
     loadSolutions();
 
-    const searchInput =
-        document.getElementById("solutionSearch");
+    // Show/Hide Add button based on Admin role
+    const role = localStorage.getItem("role") || "guest";
+    const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+    const addBtn = document.getElementById("addSolutionBtn");
+    if (addBtn) {
+        if (isLoggedIn && role === "admin") {
+            addBtn.style.display = "inline-flex";
+        } else {
+            addBtn.style.display = "none";
+        }
+    }
 
+    // Search event
+    const searchInput = document.getElementById("solutionSearch");
     if (searchInput) {
         searchInput.addEventListener("input", (e) => {
-            const query = e.target.value.toLowerCase().trim();
-            const filtered = allSolutions.filter((s) => {
-                const haystack = [
-                    s.title,
-                    s.category,
-                    s.preview,
-                    s.author
-                ]
-                    .join(" ")
-                    .toLowerCase();
-                return haystack.includes(query);
-            });
-            renderSolutions(filtered);
+            searchQuery = e.target.value;
+            applyFilters();
         });
     }
+
+    // Category Tabs event
+    const tabs = document.querySelectorAll(".category-tab");
+    tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            tabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            selectedCategory = tab.getAttribute("data-category") || "All";
+            applyFilters();
+        });
+    });
 });
+
+function applyFilters() {
+    const filtered = allSolutions.filter((s) => {
+        // Category check
+        const matchesCategory = (selectedCategory === "All") ||
+            (s.category && s.category.toUpperCase() === selectedCategory.toUpperCase());
+
+        // Search check
+        const haystack = [
+            s.title,
+            s.category,
+            s.preview,
+            s.author
+        ].join(" ").toLowerCase();
+        const matchesSearch = haystack.includes(searchQuery.toLowerCase().trim());
+
+        return matchesCategory && matchesSearch;
+    });
+    renderSolutions(filtered);
+}
 
 async function loadSolutions() {
     const tbody = document.getElementById("solutionTableBody");

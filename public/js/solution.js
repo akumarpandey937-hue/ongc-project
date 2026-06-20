@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (editorEl && typeof Quill !== "undefined") {
         quill = new Quill("#editor", {
             theme: "snow",
+            placeholder: "Please describe the issue in detail...",
             modules: {
                 toolbar: [
                     ["bold", "italic", "underline"],
@@ -13,6 +14,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 ]
             }
         });
+    }
+
+    // Prefill form from query parameters if present (e.g. when resolving a ticket)
+    const params = new URLSearchParams(window.location.search);
+    const prefillSubject = params.get("subject");
+    const prefillCategory = params.get("category");
+    const prefillDescription = params.get("description");
+
+    if (prefillSubject) {
+        const titleInput = document.getElementById("solutionTitle");
+        if (titleInput) titleInput.value = prefillSubject;
+    }
+    if (prefillCategory) {
+        const catSelect = document.getElementById("solutionCategory");
+        if (catSelect) {
+            // Find option matching category text (case-insensitive)
+            const opt = Array.from(catSelect.options).find(
+                o => o.text.toUpperCase() === prefillCategory.toUpperCase()
+            );
+            if (opt) catSelect.value = opt.value;
+        }
+    }
+    if (prefillDescription) {
+        setTimeout(() => {
+            if (quill) {
+                quill.root.innerHTML = prefillDescription;
+            } else {
+                const prevTextarea = document.getElementById("solutionPreview");
+                if (prevTextarea) prevTextarea.value = prefillDescription;
+            }
+        }, 100);
     }
 
     const cancelBtn = document.querySelector(".cancel-btn");

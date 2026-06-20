@@ -7,7 +7,15 @@ document.addEventListener(
 );
 
 function formatDateTime(date) {
-    return date.toLocaleString();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
 }
 
 function startLiveClock() {
@@ -50,7 +58,7 @@ async function initializeDashboard() {
         if (tableBody) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align:center;padding:20px;">
+                    <td colspan="9" style="text-align:center;padding:20px;">
                         Could not load dashboard. Start the backend: cd backend && npm start
                     </td>
                 </tr>
@@ -127,7 +135,10 @@ function applyFilters() {
                 ticket.status,
                 ticket.priority,
                 ticket.subject,
-                ticket.category
+                ticket.category,
+                ticket.raisedBy || "",
+                ticket.createdAt || "",
+                ticket.resolvedAt || ""
             ]
                 .join(" ")
                 .toLowerCase();
@@ -149,7 +160,7 @@ function renderTickets(tickets) {
     if (!tickets || tickets.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="6" style="text-align:center;padding:20px;">
+                <td colspan="9" style="text-align:center;padding:20px;">
                     No tickets found
                 </td>
             </tr>
@@ -167,6 +178,9 @@ function renderTickets(tickets) {
                 <td>${ticket.priority || "-"}</td>
                 <td>${escapeHtml(ticket.subject || "-")}</td>
                 <td>${ticket.category || "-"}</td>
+                <td>${escapeHtml(ticket.raisedBy || "-")}</td>
+                <td>${ticket.createdAt || "-"}</td>
+                <td>${ticket.resolvedAt || "-"}</td>
                 <td>
                     <a href="ticket-details.html?id=${ticket.id}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px; text-decoration: none;">
                         View & Reply

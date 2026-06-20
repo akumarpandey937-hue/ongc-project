@@ -64,6 +64,37 @@ function renderTicketInfo(ticket) {
     if (badgeContainer) {
         const statusClass = getStatusClass(ticket.status);
         badgeContainer.innerHTML = `<span class="badge ${statusClass}">${ticket.status || "Open"}</span>`;
+
+        // Check if resolved and user is admin to show Add to Knowledge Hub option
+        const role = localStorage.getItem("role") || "guest";
+        if (role === "admin" && (ticket.status === "Resolved" || ticket.status === "Closed")) {
+            const addBtn = document.createElement("button");
+            addBtn.className = "btn btn-primary";
+            addBtn.id = "addToKbBtn";
+            addBtn.style.marginLeft = "12px";
+            addBtn.style.padding = "6px 12px";
+            addBtn.style.fontSize = "13px";
+            addBtn.style.fontWeight = "600";
+            addBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 4px; vertical-align: middle;">
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg>
+                Add to Knowledge Hub
+            `;
+            addBtn.addEventListener("click", () => {
+                const ticketDesc = ticket.description || "";
+                const adminReply = ticket.reply || "";
+                const combinedDescription = `<strong>Issue Details:</strong><br>${ticketDesc}<br><br><strong>Resolution Steps:</strong><br>${adminReply}`;
+                
+                const params = new URLSearchParams();
+                params.set("subject", ticket.subject || "");
+                params.set("category", ticket.category || "");
+                params.set("description", combinedDescription);
+                
+                window.location.href = `add-solution.html?${params.toString()}`;
+            });
+            badgeContainer.appendChild(addBtn);
+        }
     }
 }
 

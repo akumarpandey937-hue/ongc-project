@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Solution</title>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/add-solution.css">
 </head>
@@ -20,7 +21,7 @@
 
         <div class="sidebar-menu">
             <ul>
-                <li><a href="index.html">Solution Repository</a></li>
+                <li><a href="index.html">Knowledge Hub</a></li>
                 <li><a href="dashboard.html">Ticket Dashboard</a></li>
                 <li><a href="raise-ticket.html">Raise Ticket</a></li>
                 <li><a href="add-solution.html" class="active">Add Solution</a></li>
@@ -89,8 +90,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="solutionPreview">Solution Preview / Steps</label>
-                    <textarea id="solutionPreview" rows="8" placeholder="Describe the fix or troubleshooting steps..."></textarea>
+                    <label>Description</label>
+                    <div id="editor"></div>
                 </div>
 
                 <div class="btns">
@@ -104,6 +105,7 @@
     </div>
 </div>
 
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script src="js/api.js"></script>
 <script src="js/main.js"></script>
 <script src="js/solution.js"></script>

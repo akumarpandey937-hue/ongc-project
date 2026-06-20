@@ -22,10 +22,10 @@ app.use("/api/auth", authRoutes);
 // Protected API Routes
 app.use("/api/dashboard", authMiddleware, dashboardRoutes);
 app.use("/api/tickets", authMiddleware, ticketRoutes);
-app.use("/api/solutions", authMiddleware, solutionRoutes);
+app.use("/api/solutions", solutionRoutes);
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/login.html"));
+    res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
 const PORT = 5000;
@@ -35,3 +35,4 @@ app.listen(PORT, () => {
         `Server running on port ${PORT}`
     );
 });
+// Nodemon trigger restart comment

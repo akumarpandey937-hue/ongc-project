@@ -14,5 +14,21 @@
     "preview": "Reconnect printer and restart spooler service.",
     "author": "Support Team",
     "date": "2026-05-31"
+  },
+  {
+    "id": 3,
+    "category": "OMEGA",
+    "title": "Printer Issue",
+    "preview": "Issue Details:\n\n\n\nResolution Steps:\n\nThis is resolved by resetting the server spooler",
+    "author": "admin",
+    "date": "2026-06-20"
+  },
+  {
+    "id": 4,
+    "category": "GEOTOMO",
+    "title": "Internet Issue",
+    "preview": "Changed my internet provider",
+    "author": "admin",
+    "date": "2026-06-20"
   }
 ]
