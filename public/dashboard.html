@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Admin Dashboard</title>
+    <title>IT Support Helpdesk</title>
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
@@ -49,21 +49,10 @@
 
                 <li>
                     <a href="dashboard.html" class="active">
-                        Ticket Dashboard
+                        Issue Dashboard
                     </a>
                 </li>
 
-                <li>
-                    <a href="raise-ticket.html">
-                        Raise Ticket
-                    </a>
-                </li>
-
-                <li>
-                    <a href="add-solution.html">
-                        Add Solution
-                    </a>
-                </li>
 
                 <li>
                     <a href="#">
@@ -95,12 +84,9 @@
             <div>
 
                 <div class="page-title">
-                    Admin Dashboard
+                    IT Support Helpdesk
                 </div>
 
-                <div class="page-subtitle">
-                    Knowledge & Support System
-                </div>
 
             </div>
 
@@ -133,23 +119,6 @@
 
         <div class="content-wrapper">
 
-            <!-- HEADING -->
-
-            <div class="dashboard-header">
-
-                <div>
-
-                    <h2>
-                        IT Support Helpdesk
-                    </h2>
-
-                    <p>
-                        Monitor workload, SLA health and ticket activity
-                    </p>
-
-                </div>
-
-            </div>
 
             <!-- STATS -->
 
@@ -157,7 +126,7 @@
 
                 <div class="stat-card">
 
-                    <h4>Total Tickets</h4>
+                    <h4>Total Issues</h4>
 
                     <h1 id="totalTickets">
                         -
@@ -167,9 +136,9 @@
 
                 <div class="stat-card">
 
-                    <h4>Open</h4>
+                    <h4>Resolved</h4>
 
-                    <h1 id="openTickets">
+                    <h1 id="resolvedTickets">
                         -
                     </h1>
 
@@ -177,15 +146,13 @@
 
                 <div class="stat-card">
 
-                    <h4>In Progress</h4>
+                    <h4>Unresolved</h4>
 
-                    <h1 id="inProgressTickets">
+                    <h1 id="unresolvedTickets">
                         -
                     </h1>
 
                 </div>
-
-
 
             </div>
 
@@ -199,26 +166,16 @@
                     </option>
                 </select>
 
-
-
-                <select id="priorityFilter">
-                    <option value="">
-                        All Priorities
-                    </option>
-                </select>
-
                 <select id="categoryFilter">
                     <option value="">
                         All Software Categories
                     </option>
                 </select>
 
-            </div>
-
-            <div style="margin-bottom:16px;">
-                <a href="raise-ticket.html" class="btn btn-primary" style="display:inline-block;text-decoration:none;">
-                    + Raise New Ticket
+                <a href="raise-ticket.html" class="btn btn-primary" style="display:inline-block;text-decoration:none;text-align:center;padding:12px 20px;">
+                    + Raise New Issue
                 </a>
+
             </div>
 
             <!-- TABLE -->
@@ -229,7 +186,7 @@
 
                     <input
                         type="text"
-                        placeholder="Search tickets..."
+                        placeholder="Search issues..."
                         id="ticketSearch"
                     >
 
@@ -242,13 +199,13 @@
                         <tr>
 
                             <th>ID</th>
-                            <th>Status</th>
-                            <th>Priority</th>
+                            <th>Software</th>
                             <th>Subject</th>
-                            <th>Software Category</th>
-                            <th>User</th>
+                            <th>Raised By</th>
                             <th>Date Raised</th>
                             <th>Date Resolved</th>
+                            <th>Resolved By</th>
+                            <th>Status</th>
                             <th>Action</th>
 
                         </tr>
@@ -267,7 +224,7 @@
 
         <div class="footer">
 
-            © Developed and Maintained by Database Group
+            Developed by Vansh Gupta
 
         </div>
 

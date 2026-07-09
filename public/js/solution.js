@@ -63,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
 async function submitTicket() {
     const subject = document.getElementById("ticketSubject")?.value.trim();
     const category = document.getElementById("ticketCategory")?.value;
-    const priority = document.getElementById("ticketPriority")?.value;
     const raisedBy =
         localStorage.getItem("username") || "admin";
     const description = quill
@@ -80,16 +79,39 @@ async function submitTicket() {
         return;
     }
 
+    const fileInput = document.getElementById("fileUpload");
+    const file = fileInput ? fileInput.files[0] : null;
+    let attachment = null;
+
+    const submitBtn = document.querySelector(".submit-btn");
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting...";
+    }
+
     try {
+        if (file) {
+            attachment = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve({
+                    name: file.name,
+                    type: file.type,
+                    data: reader.result.split(',')[1]
+                });
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
         const result = await createTicket({
             subject,
             category,
-            priority: priority || "Medium",
             raisedBy,
-            description
+            description,
+            attachment
         });
 
-        alert(result.message || "Ticket submitted successfully.");
+        alert(result.message || "Issue submitted successfully.");
         const role = localStorage.getItem("role") || "admin";
         if (role === "admin") {
             window.location.href = "dashboard.html";
@@ -100,8 +122,13 @@ async function submitTicket() {
         console.error(error);
         alert(
             error.message ||
-            "Failed to submit ticket. Make sure the backend is running."
+            "Failed to submit issue. Make sure the backend is running."
         );
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit Issue";
+        }
     }
 }
 

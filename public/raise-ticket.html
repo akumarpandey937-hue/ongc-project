@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raise Ticket</title>
+    <title>Raise Issue</title>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/add-solution.css">
@@ -22,9 +22,7 @@
         <div class="sidebar-menu">
             <ul>
                 <li><a href="index.html">Knowledge Hub</a></li>
-                <li><a href="dashboard.html">Ticket Dashboard</a></li>
-                <li><a href="raise-ticket.html" class="active">Raise Ticket</a></li>
-                <li><a href="add-solution.html">Add Solution</a></li>
+                <li><a href="dashboard.html">Issue Dashboard</a></li>
             </ul>
         </div>
 
@@ -36,7 +34,7 @@
     <div class="main-content">
         <div class="topbar">
             <div>
-                <div class="page-title">Raise Ticket</div>
+                <div class="page-title">Raise Issue</div>
                 <div class="page-subtitle">Submit a new support request</div>
             </div>
             <div class="user-profile-menu">
@@ -75,29 +73,18 @@
                     <input type="text" id="ticketSubject" placeholder="e.g. VPN connection failure">
                 </div>
 
-                <div class="row">
-                    <div class="form-group">
-                        <label for="ticketCategory">Software Category</label>
-                        <select id="ticketCategory">
-                            <option value="">Select Software Category</option>
-                            <option>PARADIGM</option>
-                            <option>OMEGA</option>
-                            <option>CGG</option>
-                            <option>GEOTOMO</option>
-                            <option>SCUBE</option>
-                            <option>SHARP REFLECTION</option>
-                            <option>LINUX</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="ticketPriority">Priority</label>
-                        <select id="ticketPriority">
-                            <option>Low</option>
-                            <option selected>Medium</option>
-                            <option>High</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label for="ticketCategory">Software Category</label>
+                    <select id="ticketCategory">
+                        <option value="">Select Software Category</option>
+                        <option>PARADIGM</option>
+                        <option>OMEGA</option>
+                        <option>CGG</option>
+                        <option>GEOTOMO</option>
+                        <option>SCUBE</option>
+                        <option>SHARP REFLECTION</option>
+                        <option>LINUX</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -113,19 +100,19 @@
 
                 <div class="btns">
                     <button type="button" class="cancel-btn">Cancel</button>
-                    <button type="button" class="submit-btn" onclick="submitTicket()">Submit Ticket</button>
+                    <button type="button" class="submit-btn" onclick="submitTicket()">Submit Issue</button>
                 </div>
             </div>
         </div>
 
-        <div class="footer">© Developed and Maintained by Database Group</div>
+        <div class="footer">Developed by Vansh Gupta</div>
     </div>
 </div>
 
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-<script src="js/api.js"></script>
-<script src="js/main.js"></script>
-<script src="js/solution.js"></script>
+<script src="js/api.js?v=1.2"></script>
+<script src="js/main.js?v=1.2"></script>
+<script src="js/solution.js?v=1.2"></script>
 
 </body>
 </html>

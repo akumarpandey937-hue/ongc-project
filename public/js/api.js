@@ -41,6 +41,10 @@ async function getDashboardStats() {
     return apiRequest("/dashboard/stats");
 }
 
+async function getUserProfile() {
+    return apiRequest("/auth/profile");
+}
+
 async function getTickets() {
     return apiRequest("/tickets");
 }
@@ -84,8 +88,40 @@ async function createSolution(solution) {
     });
 }
 
+async function updateSolution(id, updates) {
+    return apiRequest(`/solutions/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(updates)
+    });
+}
+
 async function deleteSolution(id) {
     return apiRequest(`/solutions/${id}`, {
         method: "DELETE"
     });
 }
+
+async function getAllUsers() {
+    return apiRequest("/auth/users");
+}
+
+async function updateUser(username, updates) {
+    return apiRequest(`/auth/users/${username}`, {
+        method: "PATCH",
+        body: JSON.stringify(updates)
+    });
+}
+
+async function createUser(userData) {
+    return apiRequest("/auth/users", {
+        method: "POST",
+        body: JSON.stringify(userData)
+    });
+}
+
+async function deleteUser(username) {
+    return apiRequest(`/auth/users/${username}`, {
+        method: "DELETE"
+    });
+}
+

@@ -1,16 +1,20 @@
 [
   {
-    "id": 1001,
-    "status": "Open",
+    "id": 1,
+    "status": "Resolved",
     "sla": "Within SLA",
     "priority": "High",
     "subject": "Email Not Working",
     "category": "PARADIGM",
     "raisedBy": "Ashutosh",
-    "createdAt": "2025-05-20"
+    "createdAt": "2025-05-20",
+    "reply": "isseu resolved",
+    "repliedBy": "admin",
+    "resolvedAt": "2026-06-25",
+    "resolvedBy": "admin"
   },
   {
-    "id": 1002,
+    "id": 2,
     "status": "Resolved",
     "sla": "Near Breach",
     "priority": "Medium",
@@ -19,20 +23,22 @@
     "raisedBy": "Admin",
     "createdAt": "2025-05-21",
     "reply": "This is resolved by resetting the server spooler",
-    "resolvedAt": "2026-06-20"
+    "resolvedAt": "2026-06-20",
+    "resolvedBy": "admin"
   },
   {
-    "id": 1003,
-    "status": "Closed",
+    "id": 3,
+    "status": "Resolved",
     "sla": "Resolved",
     "priority": "Low",
     "subject": "Software Installation",
     "category": "CGG",
     "raisedBy": "User1",
-    "createdAt": "2025-05-22"
+    "createdAt": "2025-05-22",
+    "resolvedBy": "admin"
   },
   {
-    "id": 1780215951641,
+    "id": 4,
     "status": "Resolved",
     "sla": "Within SLA",
     "priority": "High",
@@ -41,10 +47,11 @@
     "raisedBy": "Ashutosh",
     "createdAt": "31/5/2026",
     "reply": "Will not work",
-    "resolvedAt": "2026-06-20"
+    "resolvedAt": "2026-06-20",
+    "resolvedBy": "admin"
   },
   {
-    "id": 1780216047411,
+    "id": 5,
     "status": "Resolved",
     "sla": "Within SLA",
     "priority": "High",
@@ -53,10 +60,11 @@
     "raisedBy": "Ashutosh",
     "createdAt": "31/5/2026",
     "reply": "Chnged my internet provider",
-    "resolvedAt": "2026-06-20"
+    "resolvedAt": "2026-06-20",
+    "resolvedBy": "admin"
   },
   {
-    "id": 1781460140499,
+    "id": 6,
     "status": "Resolved",
     "sla": "Within SLA",
     "priority": "High",
@@ -65,10 +73,11 @@
     "raisedBy": "User",
     "description": "<p>nahi chal rha laptop<strong> aake theek karo<span class=\"ql-cursor\">﻿</span></strong></p>",
     "createdAt": "2026-06-14",
-    "reply": "nahi ayenge"
+    "reply": "nahi ayenge",
+    "resolvedBy": "admin"
   },
   {
-    "id": 1781763255953,
+    "id": 7,
     "status": "Resolved",
     "sla": "Within SLA",
     "priority": "Medium",
@@ -78,6 +87,22 @@
     "description": "<p>To add <strong>hostname </strong>we need to <u>use </u><em>command </em><strong>hostanamectl</strong></p>",
     "createdAt": "2026-06-18",
     "reply": "nil",
-    "resolvedAt": "2026-06-20"
+    "resolvedAt": "2026-06-20",
+    "resolvedBy": "admin"
+  },
+  {
+    "id": 8,
+    "status": "Resolved",
+    "sla": "Within SLA",
+    "priority": "Medium",
+    "subject": "CMD not working",
+    "category": "LINUX",
+    "raisedBy": "user",
+    "description": "<p>My cmd in <strong>administrator </strong>is not working</p>",
+    "createdAt": "2026-06-25",
+    "resolvedBy": "admin2",
+    "reply": "Restart system",
+    "repliedBy": "admin2",
+    "resolvedAt": "2026-06-25"
   }
 ]

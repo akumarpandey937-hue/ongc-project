@@ -1,82 +1,134 @@
 const express = require("express");
-const fs = require("fs");
-const path = require("path");
+const pool = require("../config/db");
 const authMiddleware = require("../middleware/auth");
 
 const router = express.Router();
 
-const dataPath = path.join(__dirname, "../data/solutions.json");
-
-function loadSolutions() {
-    return JSON.parse(fs.readFileSync(dataPath, "utf8"));
-}
-
-function saveSolutions(solutions) {
-    fs.writeFileSync(
-        dataPath,
-        JSON.stringify(solutions, null, 2)
-    );
-}
-
-router.get("/", (req, res) => {
-    res.json(loadSolutions());
-});
-
-router.get("/:id", (req, res) => {
-    const solutions = loadSolutions();
-    const solution = solutions.find(
-        (s) => s.id == req.params.id
-    );
-
-    if (!solution) {
-        return res.status(404).json({
-            message: "Solution not found"
-        });
+// Restrict all solutions routes to authenticated admin users
+router.use(authMiddleware);
+router.use((req, res, next) => {
+    if (req.user && req.user.role === "admin") {
+        next();
+    } else {
+        return res.status(403).json({ message: "Access denied. Admin role required." });
     }
-
-    res.json(solution);
 });
 
-router.post("/", authMiddleware, (req, res) => {
-    const solutions = loadSolutions();
-
-    const nextId = solutions.length ? Math.max(...solutions.map(s => Number(s.id))) + 1 : 1;
-
-    const newSolution = {
-        id: nextId,
-        category: req.body.category || "General",
-        title: req.body.title || "Untitled",
-        preview: req.body.preview || "",
-        author: req.body.author || "Admin",
-        date: new Date().toISOString().slice(0, 10)
-    };
-
-    solutions.push(newSolution);
-    saveSolutions(solutions);
-
-    res.status(201).json({
-        message: "Solution added successfully",
-        solution: newSolution
-    });
-});
-
-router.delete("/:id", authMiddleware, (req, res) => {
-    const solutions = loadSolutions();
-    const updated = solutions.filter(
-        (s) => s.id != req.params.id
-    );
-
-    if (updated.length === solutions.length) {
-        return res.status(404).json({
-            message: "Solution not found"
-        });
+// Get All Solutions
+router.get("/", async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM solutions ORDER BY id DESC");
+        res.json(rows);
+    } catch (err) {
+        console.error("Fetch solutions error:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
+});
 
-    saveSolutions(updated);
+// Get Single Solution
+router.get("/:id", async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM solutions WHERE id = ?", [req.params.id]);
+        const solution = rows[0];
 
-    res.json({
-        message: "Solution deleted successfully"
-    });
+        if (!solution) {
+            return res.status(404).json({ message: "Solution not found" });
+        }
+
+        res.json(solution);
+    } catch (err) {
+        console.error("Fetch solution details error:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+// Create Solution
+router.post("/", async (req, res) => {
+    const { category, title, preview, author } = req.body;
+
+    try {
+        const [result] = await pool.query(
+            "INSERT INTO solutions (category, title, preview, author, date) VALUES (?, ?, ?, ?, ?)",
+            [
+                category || "General",
+                title || "Untitled",
+                preview || "",
+                author || req.user.username || "Admin",
+                new Date().toISOString().slice(0, 10)
+            ]
+        );
+
+        const newSolution = {
+            id: result.insertId,
+            category: category || "General",
+            title: title || "Untitled",
+            preview: preview || "",
+            author: author || req.user.username || "Admin",
+            date: new Date().toISOString().slice(0, 10)
+        };
+
+        res.status(201).json({
+            message: "Solution added successfully",
+            solution: newSolution
+        });
+    } catch (err) {
+        console.error("Create solution error:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+// Delete Solution
+router.delete("/:id", async (req, res) => {
+    try {
+        const [result] = await pool.query("DELETE FROM solutions WHERE id = ?", [req.params.id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Solution not found" });
+        }
+
+        res.json({ message: "Solution deleted successfully" });
+    } catch (err) {
+        console.error("Delete solution error:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+// Update Solution
+router.patch("/:id", async (req, res) => {
+    const { category, title, preview } = req.body;
+
+    try {
+        const [rows] = await pool.query("SELECT * FROM solutions WHERE id = ?", [req.params.id]);
+        const solution = rows[0];
+
+        if (!solution) {
+            return res.status(404).json({ message: "Solution not found" });
+        }
+
+        const updatedCategory = category !== undefined ? category : solution.category;
+        const updatedTitle = title !== undefined ? title : solution.title;
+        const updatedPreview = preview !== undefined ? preview : solution.preview;
+
+        await pool.query(
+            "UPDATE solutions SET category = ?, title = ?, preview = ? WHERE id = ?",
+            [updatedCategory, updatedTitle, updatedPreview, req.params.id]
+        );
+
+        res.json({
+            message: "Solution updated successfully",
+            solution: {
+                id: solution.id,
+                category: updatedCategory,
+                title: updatedTitle,
+                preview: updatedPreview,
+                author: solution.author,
+                date: solution.date
+            }
+        });
+    } catch (err) {
+        console.error("Update solution error:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
 });
 
 module.exports = router;

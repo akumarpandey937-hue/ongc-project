@@ -15,51 +15,62 @@
     box-shadow: var(--shadow-sm);
 }
 
+.content-wrapper .card {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
+    border: 2px solid var(--accent-orange) !important;
+    border-radius: 10px !important;
+    overflow: hidden;
 }
 
 thead {
-    background: rgba(0, 0, 0, 0.015);
-    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(90deg, #1e293b, #0f172a) !important;
 }
 
 th {
-    padding: 18px;
+    padding: 16px !important;
     text-align: left;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.5px !important;
+    border: 1px solid #334155 !important;
+    border-bottom: 3px solid var(--accent-orange) !important;
 }
 
 td {
-    padding: 20px;
-    border-top: 1px solid var(--border-color);
+    padding: 16px !important;
+    border: 1px solid rgba(234, 88, 12, 0.15) !important;
     color: var(--text-primary);
-    font-size: 14px;
+    font-size: 14px !important;
+    vertical-align: middle;
 }
 
 tbody tr {
     transition: background-color 0.2s ease;
 }
 
-tbody tr:hover {
-    background-color: var(--hover-bg);
+tbody tr:nth-child(even) {
+    background-color: rgba(234, 88, 12, 0.02) !important;
 }
 
-.category-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 30px;
-    border: 1px solid var(--accent-orange);
-    color: var(--accent-orange);
-    background: rgba(234, 88, 12, 0.04);
-    font-size: 12px;
+tbody tr:hover {
+    background-color: rgba(234, 88, 12, 0.06) !important;
+}
+
+.simple-category-text {
     font-weight: 600;
+    color: var(--text-secondary);
     text-transform: uppercase;
+    font-size: 13px;
     letter-spacing: 0.5px;
 }
 
@@ -99,4 +110,16 @@ tbody tr:hover {
 
 .open-btn:active {
     transform: translateY(0);
+}
+
+.read-more-link {
+    color: #2563eb !important;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.15s ease;
+}
+
+.read-more-link:hover {
+    text-decoration: underline;
+    color: #1d4ed8 !important;
 }

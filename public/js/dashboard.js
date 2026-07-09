@@ -43,11 +43,8 @@ async function initializeDashboard() {
         const stats = await getDashboardStats();
 
         setText("totalTickets", stats.totalTickets);
-        setText("openTickets", stats.openTickets);
-        setText(
-            "inProgressTickets",
-            stats.inProgressTickets || stats.inProgress || 0
-        );
+        setText("resolvedTickets", stats.resolvedTickets || stats.resolved || 0);
+        setText("unresolvedTickets", stats.unresolvedTickets || stats.unresolved || 0);
 
         allTickets = await getTickets();
         populateFilters(allTickets);
@@ -73,9 +70,10 @@ function setText(id, value) {
 }
 
 function populateFilters(tickets) {
-    fillSelect("statusFilter", uniqueValues(tickets, "status"));
-    fillSelect("priorityFilter", uniqueValues(tickets, "priority"));
-    fillSelect("categoryFilter", uniqueValues(tickets, "category"));
+    const statuses = ["Resolved", "Unresolved"];
+    const categories = ["PARADIGM", "OMEGA", "CGG", "GEOTOMO", "SCUBE", "SHARP REFLECTION", "LINUX"];
+    fillSelect("statusFilter", statuses);
+    fillSelect("categoryFilter", categories);
 }
 
 function uniqueValues(items, key) {
@@ -101,7 +99,6 @@ function fillSelect(id, values) {
 function bindFilters() {
     const filterIds = [
         "statusFilter",
-        "priorityFilter",
         "categoryFilter"
     ];
 
@@ -116,8 +113,6 @@ function bindFilters() {
 
 function applyFilters() {
     const status = document.getElementById("statusFilter")?.value || "";
-    const priority =
-        document.getElementById("priorityFilter")?.value || "";
     const category =
         document.getElementById("categoryFilter")?.value || "";
     const search = (
@@ -126,19 +121,18 @@ function applyFilters() {
 
     const filtered = allTickets.filter((ticket) => {
         if (status && ticket.status !== status) return false;
-        if (priority && ticket.priority !== priority) return false;
         if (category && ticket.category !== category) return false;
 
         if (search) {
             const haystack = [
                 ticket.id,
                 ticket.status,
-                ticket.priority,
                 ticket.subject,
                 ticket.category,
                 ticket.raisedBy || "",
                 ticket.createdAt || "",
-                ticket.resolvedAt || ""
+                ticket.resolvedAt || "",
+                ticket.resolvedBy || ""
             ]
                 .join(" ")
                 .toLowerCase();
@@ -160,8 +154,8 @@ function renderTickets(tickets) {
     if (!tickets || tickets.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="9" style="text-align:center;padding:20px;">
-                    No tickets found
+                <td colspan="9" style="text-align:center;padding:30px;color:var(--text-secondary);font-size:15px;font-weight:500;">
+                    No record found
                 </td>
             </tr>
         `;
@@ -170,17 +164,19 @@ function renderTickets(tickets) {
 
     tickets.forEach((ticket) => {
         const statusClass = getStatusClass(ticket.status);
-
+        const resolver = ticket.resolvedBy || "-";
+        const capitalizedResolver = resolver !== "-" ? resolver.charAt(0).toUpperCase() + resolver.slice(1) : "-";
+ 
         tableBody.innerHTML += `
             <tr>
                 <td>#${ticket.id}</td>
-                <td><span class="badge ${statusClass}">${ticket.status || "-"}</span></td>
-                <td>${ticket.priority || "-"}</td>
-                <td>${escapeHtml(ticket.subject || "-")}</td>
                 <td>${ticket.category || "-"}</td>
+                <td>${escapeHtml(ticket.subject || "-")}</td>
                 <td>${escapeHtml(ticket.raisedBy || "-")}</td>
-                <td>${ticket.createdAt || "-"}</td>
-                <td>${ticket.resolvedAt || "-"}</td>
+                <td>${formatDate(ticket.createdAt)}</td>
+                <td>${formatDate(ticket.resolvedAt)}</td>
+                <td>${capitalizedResolver}</td>
+                <td><span style="color: ${ticket.status === 'Resolved' ? '#16a34a' : '#dc2626'}; font-weight: 600;">${ticket.status || "-"}</span></td>
                 <td>
                     <a href="ticket-details.html?id=${ticket.id}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px; text-decoration: none;">
                         View & Reply
@@ -192,9 +188,8 @@ function renderTickets(tickets) {
 }
 
 function getStatusClass(status) {
-    if (status === "Open") return "badge-open";
-    if (status === "In Progress") return "badge-progress";
-    if (status === "Closed") return "badge-closed";
+    if (status === "Unresolved") return "badge-progress";
+    if (status === "Resolved") return "badge-closed";
     return "";
 }
 
@@ -211,4 +206,19 @@ function escapeHtml(text) {
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
+}
+
+function formatDate(dateStr) {
+    if (!dateStr || dateStr === "-") return "-";
+    const parts = dateStr.trim().split(" ");
+    const datePart = parts[0];
+    if (datePart.includes("-")) {
+        const datePieces = datePart.split("-");
+        if (datePieces.length === 3 && datePieces[0].length === 4) {
+            // yyyy-mm-dd
+            const timePart = parts[1] ? ` ${parts[1]}` : "";
+            return `${datePieces[2]}/${datePieces[1]}/${datePieces[0]}${timePart}`;
+        }
+    }
+    return dateStr;
 }

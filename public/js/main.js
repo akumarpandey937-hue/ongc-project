@@ -10,22 +10,26 @@ function requireAuth() {
         localStorage.getItem("loggedIn") === "true";
     const role = localStorage.getItem("role") || "user";
 
-    // If user is logged in and visits login.html, redirect them to index.html
+    // If user is logged in and visits login.html, redirect them to appropriate landing page
     if (page === "login.html") {
         if (isLoggedIn) {
-            window.location.href = "index.html";
+            if (role === "admin") {
+                window.location.href = "index.html";
+            } else {
+                window.location.href = "user-dashboard.html";
+            }
         }
         return;
     }
 
-    // These pages are public and accessible to guest users
-    const PUBLIC_PAGES = ["index.html", "view-ticket.html"];
+    // No public pages accessible for visitors except the login screen (and its static resources)
+    const PUBLIC_PAGES = [];
 
     if (PUBLIC_PAGES.includes(page)) {
         return;
     }
 
-    // For any other page, login is compulsory
+    // For any page, login is compulsory
     if (!isLoggedIn) {
         window.location.href = "login.html";
         return;
@@ -33,7 +37,8 @@ function requireAuth() {
 
     // Protect routes based on role
     if (role === "user") {
-        if (page === "dashboard.html" || page === "add-solution.html") {
+        // Users are not allowed to access index.html (Knowledge Hub), view-ticket.html (Solution Detail), dashboard.html (Admin Ticket Dashboard), add-solution.html (Publish Solution), user-management.html, or performance-report.html
+        if (page === "index.html" || page === "view-ticket.html" || page === "dashboard.html" || page === "add-solution.html" || page === "user-management.html" || page === "performance-report.html") {
             window.location.href = "user-dashboard.html";
         }
     } else if (role === "admin") {
@@ -49,6 +54,71 @@ document.addEventListener("DOMContentLoaded", () => {
     const isLoggedIn = localStorage.getItem("loggedIn") === "true";
     const username = isLoggedIn ? (localStorage.getItem("username") || "User") : "Guest";
     const role = isLoggedIn ? (localStorage.getItem("role") || "user") : "guest";
+
+    if (role === "user") {
+        const sidebar = document.querySelector("aside.sidebar");
+        if (sidebar) {
+            sidebar.style.display = "none";
+        }
+
+        const topbar = document.querySelector(".topbar");
+        if (topbar) {
+            topbar.style.position = "relative";
+
+            // Add/Move logo to topbar left
+            let logoImg = document.getElementById("topbarLogo");
+            if (!logoImg) {
+                logoImg = document.createElement("img");
+                logoImg.id = "topbarLogo";
+                logoImg.src = "assets/icons/logo.webp";
+                logoImg.alt = "ONGC Logo";
+                logoImg.style.maxHeight = "45px";
+                logoImg.style.width = "auto";
+                logoImg.style.objectFit = "contain";
+            }
+            topbar.insertBefore(logoImg, topbar.firstChild);
+
+            // Find the title text container
+            const pageTitle = topbar.querySelector(".page-title");
+            if (pageTitle) {
+                const titleContainer = pageTitle.parentElement;
+                if (titleContainer) {
+                    titleContainer.style.position = "absolute";
+                    titleContainer.style.left = "50%";
+                    titleContainer.style.transform = "translateX(-50%)";
+                    titleContainer.style.textAlign = "center";
+
+                    // Make sure logo is not inside titleContainer
+                    const logoInside = titleContainer.querySelector("#topbarLogo");
+                    if (logoInside) {
+                        logoInside.remove();
+                    }
+
+                    // Update text
+                    const currentPage = getCurrentPage();
+                    const capitalizedUsername = username.charAt(0).toUpperCase() + username.slice(1);
+                    if (currentPage === "user-dashboard.html") {
+                        pageTitle.textContent = "Issue Management Portal";
+                    } else if (currentPage === "raise-ticket.html") {
+                        pageTitle.textContent = "Raise New Issue";
+                    } else if (currentPage === "ticket-details.html") {
+                        pageTitle.textContent = "Issue Details";
+                    } else {
+                        pageTitle.textContent = pageTitle.textContent
+                            .replace(/ticket/gi, "issue")
+                            .replace(/tickets/gi, "issues")
+                            .replace(/My Tickets/gi, "Issue Management Portal");
+                    }
+
+                    // Remove subtitle
+                    const pageSubtitle = titleContainer.querySelector(".page-subtitle");
+                    if (pageSubtitle) {
+                        pageSubtitle.remove();
+                    }
+                }
+            }
+        }
+    }
 
     const userId = document.getElementById("userId");
     const sessionUser = document.getElementById("sessionUser");
@@ -87,25 +157,35 @@ document.addEventListener("DOMContentLoaded", () => {
         const currentPage = getCurrentPage();
         if (!isLoggedIn) {
             sidebarMenu.innerHTML = `
-                <li><a href="index.html" class="${currentPage === "index.html" ? "active" : ""}">Knowledge Hub</a></li>
+                <li><a href="login.html">Sign In</a></li>
             `;
         } else if (role === "admin") {
+            const isUserMgmtActive = currentPage === "user-management.html";
+            const isPerfReportActive = currentPage === "performance-report.html";
+            const isDropdownOpen = isUserMgmtActive || isPerfReportActive;
             sidebarMenu.innerHTML = `
-                <li><a href="index.html" class="${currentPage === "index.html" ? "active" : ""}">Knowledge Hub</a></li>
-                <li><a href="dashboard.html" class="${currentPage === "dashboard.html" ? "active" : ""}">Ticket Dashboard</a></li>
-                <li><a href="raise-ticket.html" class="${currentPage === "raise-ticket.html" ? "active" : ""}">Raise Ticket</a></li>
-                <li><a href="add-solution.html" class="${currentPage === "add-solution.html" ? "active" : ""}">Add Solution</a></li>
+                <li><a href="index.html" class="${(currentPage === "index.html" || currentPage === "view-ticket.html") ? "active" : ""}">Knowledge Hub</a></li>
+                <li><a href="dashboard.html" class="${currentPage === "dashboard.html" ? "active" : ""}">Issue Dashboard</a></li>
+                <li class="sidebar-dropdown-item ${isDropdownOpen ? "open" : ""}">
+                    <a href="#" class="dropdown-toggle" onclick="toggleSidebarDropdown(event)">
+                        <span>Admin Controls</span>
+                        <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: auto; transition: transform 0.3s;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <ul class="sidebar-dropdown">
+                        <li><a href="user-management.html" class="${isUserMgmtActive ? "active" : ""}">User Management</a></li>
+                        <li><a href="performance-report.html" class="${isPerfReportActive ? "active" : ""}">Performance Report</a></li>
+                    </ul>
+                </li>
             `;
         } else {
             sidebarMenu.innerHTML = `
-                <li><a href="index.html" class="${currentPage === "index.html" ? "active" : ""}">Knowledge Hub</a></li>
-                <li><a href="user-dashboard.html" class="${currentPage === "user-dashboard.html" ? "active" : ""}">My Tickets</a></li>
-                <li><a href="raise-ticket.html" class="${currentPage === "raise-ticket.html" ? "active" : ""}">Raise Ticket</a></li>
+                <li><a href="user-dashboard.html" class="${currentPage === "user-dashboard.html" ? "active" : ""}">Issue Management Portal</a></li>
+                <li><a href="raise-ticket.html" class="${currentPage === "raise-ticket.html" ? "active" : ""}">Raise Issue</a></li>
             `;
         }
     }
 
-    // Setup Topbar buttons (Login or Home)
+    // Setup Topbar buttons (Login)
     const profileMenu = document.querySelector(".user-profile-menu");
     if (profileMenu) {
         if (!isLoggedIn) {
@@ -124,37 +204,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
                 profileMenu.parentNode.appendChild(loginBtn);
             }
-            const homeBtn = document.getElementById("topbarHomeBtn");
-            if (homeBtn) homeBtn.remove();
         } else {
             profileMenu.style.display = "inline-block";
             const loginBtn = document.getElementById("topbarLoginBtn");
             if (loginBtn) loginBtn.remove();
-
-            if (!document.getElementById("topbarHomeBtn")) {
-                const homeBtn = document.createElement("a");
-                homeBtn.id = "topbarHomeBtn";
-                homeBtn.href = "index.html";
-                homeBtn.className = "btn btn-secondary";
-                homeBtn.style.marginRight = "15px";
-                homeBtn.style.padding = "8px 14px";
-                homeBtn.style.display = "inline-flex";
-                homeBtn.style.alignItems = "center";
-                homeBtn.style.gap = "8px";
-                homeBtn.style.textDecoration = "none";
-                homeBtn.style.fontSize = "13px";
-                homeBtn.style.borderRadius = "8px";
-                homeBtn.style.fontWeight = "600";
-                homeBtn.style.border = "1px solid #e5e7eb";
-                homeBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: middle;">
-                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
-                        <path d="m8 3.293 6 6V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V9.293l6-6Z"/>
-                    </svg>
-                    Home
-                `;
-                profileMenu.parentNode.insertBefore(homeBtn, profileMenu);
-            }
         }
     }
 
@@ -234,16 +287,23 @@ function showAccountDetailsModal(username) {
     }
 
     const parts = username.trim().split(/[\s._-]+/);
-    const initials = (parts.length > 1 && parts[0] && parts[1]) 
-        ? (parts[0][0] + parts[1][0]).toUpperCase() 
+    const initials = (parts.length > 1 && parts[0] && parts[1])
+        ? (parts[0][0] + parts[1][0]).toUpperCase()
         : username.substring(0, Math.min(username.length, 2)).toUpperCase();
 
     const role = (localStorage.getItem("role") || "admin") === "admin" ? "System Administrator" : "Portal User";
     const status = "Active";
-    
+
     let loginTime = localStorage.getItem("loginTime");
     if (!loginTime) {
-        loginTime = new Date().toLocaleString();
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        loginTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
         localStorage.setItem("loginTime", loginTime);
     }
 
@@ -311,7 +371,7 @@ function showAccountDetailsModal(username) {
 
     document.body.insertAdjacentHTML("beforeend", modalHTML);
     const overlay = document.getElementById("userDetailsModalOverlay");
-    
+
     // Animate open
     setTimeout(() => {
         overlay.classList.add("show");
@@ -340,3 +400,10 @@ function logout() {
     localStorage.removeItem("role");
     window.location.href = "login.html";
 }
+
+window.toggleSidebarDropdown = function (event) {
+    event.preventDefault();
+    const dropdownLink = event.currentTarget;
+    const dropdownItem = dropdownLink.parentElement;
+    dropdownItem.classList.toggle("open");
+};

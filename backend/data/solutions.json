@@ -19,7 +19,7 @@
     "id": 3,
     "category": "OMEGA",
     "title": "Printer Issue",
-    "preview": "Issue Details:\n\n\n\nResolution Steps:\n\nThis is resolved by resetting the server spooler",
+    "preview": "This is resolved by resetting the server spooler",
     "author": "admin",
     "date": "2026-06-20"
   },

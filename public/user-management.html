@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - ONGC Support Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ticket.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- SIDEBAR (Rebuilt dynamically by main.js, placeholder for standard structure) -->
+        <aside class="sidebar">
+            <div class="logo-section">
+                <img src="assets/icons/logo.webp" alt="ONGC Logo">
+                <div class="logo-title">ONGC Support Portal</div>
+                <div class="logo-subtitle">Operations Workspace</div>
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <!-- Menu populated by main.js -->
+                </ul>
+            </div>
+            <div class="logout-area">
+                <button class="logout-btn" id="logoutBtn">Secure Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <div class="page-title">User Management</div>
+                    <div class="page-subtitle">View and manage support portal user access credentials and privileges
+                    </div>
+                </div>
+
+                <!-- Profile Menu (populated by main.js) -->
+                <div class="user-profile-menu">
+                    <button class="profile-trigger" id="profileTrigger" aria-label="User Profile">
+                        <span class="avatar-circle" id="avatarCircle">--</span>
+                        <span class="status-indicator online"></span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="dropdown-header">
+                            <div class="dropdown-avatar" id="dropdownAvatar">--</div>
+                            <div class="dropdown-user-info">
+                                <div class="dropdown-username" id="dropdownUsername">--</div>
+                                <div class="dropdown-role" id="dropdownRole">--</div>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-menu-list">
+                            <button class="dropdown-item" id="viewDetailsBtn">Account Details</button>
+                            <button class="dropdown-item logout-item" id="dropdownLogoutBtn">Sign Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN BODY -->
+            <div class="content-wrapper">
+
+                <div class="user-mgmt-header">
+                    <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin: 0;">Portal Users
+                    </h2>
+                    <button class="btn-create-user" id="openCreateUserModalBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            viewBox="0 0 16 16" style="vertical-align: middle;">
+                            <path
+                                d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+                            <path
+                                d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C8.844 9.002 8.412 9 8 9c-5 0-6 3-6 4s1 1 1 1z" />
+                        </svg>
+                        Create New User
+                    </button>
+                </div>
+
+                <!-- Users List Table Card -->
+                <div class="card" style="padding: 0; overflow-x: auto;">
+                    <table class="ticket-table" style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 16px 24px; text-align: left;">Name</th>
+                                <th style="padding: 16px 24px; text-align: left;">Username</th>
+                                <th style="padding: 16px 24px; text-align: left;">CPF ID</th>
+                                <th style="padding: 16px 24px; text-align: left;">Mobile No.</th>
+                                <th style="padding: 16px 24px; text-align: left;">Role Privilege</th>
+                                <th style="padding: 16px 24px; text-align: center;">Account Status</th>
+                                <th style="padding: 16px 24px; text-align: center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Populated by user-management.js -->
+                            <tr>
+                                <td colspan="7"
+                                    style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                                    Loading active users...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CREATE USER MODAL -->
+    <div class="modal-overlay" id="createUserModalOverlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Register New Portal User</h3>
+                <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="createUserForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="newUsername">Username*</label>
+                        <input type="text" id="newUsername" required placeholder="e.g. employee@ongc.co.in">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Initial Password *</label>
+                        <input type="password" id="newPassword" required placeholder="Enter password (min 6 chars)">
+                    </div>
+                    <div class="form-group">
+                        <label for="newRole">Role Privilege *</label>
+                        <select id="newRole" required>
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newName">Full Name</label>
+                        <input type="text" id="newName" placeholder="e.g. Rahul Sharma">
+                    </div>
+                    <div class="form-group">
+                        <label for="newCpfId">CPF ID</label>
+                        <input type="text" id="newCpfId" placeholder="e.g. 123456">
+                    </div>
+                    <div class="form-group">
+                        <label for="newMobileNo">Mobile Number</label>
+                        <input type="text" id="newMobileNo" placeholder="e.g. 9876543210">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" id="cancelModalBtn">Cancel</button>
+                    <button type="submit" class="btn-save">Create User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CHANGE PASSWORD MODAL -->
+    <div class="modal-overlay" id="changePasswordModalOverlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Change User Password</h3>
+                <button class="modal-close-btn" id="closePassModalBtn">&times;</button>
+            </div>
+            <form id="changePasswordForm">
+                <input type="hidden" id="changePassUsername">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="newPassTarget" id="changePassTargetLabel">New Password *</label>
+                        <input type="password" id="newPassTarget" required
+                            placeholder="Enter new password (min 6 chars)">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" id="cancelPassModalBtn">Cancel</button>
+                    <button type="submit" class="btn-save">Save Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EDIT USER MODAL -->
+    <div class="modal-overlay" id="editUserModalOverlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Edit Portal User Details</h3>
+                <button class="modal-close-btn" id="closeEditModalBtn">&times;</button>
+            </div>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserUsername">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="editNewUsername">Username*</label>
+                        <input type="text" id="editNewUsername" required placeholder="e.g. employee@ongc.co.in">
+                    </div>
+                    <div class="form-group">
+                        <label for="editName">Full Name</label>
+                        <input type="text" id="editName" placeholder="e.g. Rahul Sharma">
+                    </div>
+                    <div class="form-group">
+                        <label for="editCpfId">CPF ID</label>
+                        <input type="text" id="editCpfId" placeholder="e.g. 123456">
+                    </div>
+                    <div class="form-group">
+                        <label for="editMobileNo">Mobile Number</label>
+                        <input type="text" id="editMobileNo" placeholder="e.g. 9876543210">
+                    </div>
+                    <div class="form-group">
+                        <label for="editRole">Role Privilege *</label>
+                        <select id="editRole" required>
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" id="cancelEditModalBtn">Cancel</button>
+                    <button type="submit" class="btn-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/user-management.js"></script>
+</body>
+
+</html>

@@ -37,6 +37,80 @@ async function initializeDashboard() {
     bindFilters();
 
     const username = localStorage.getItem("username") || "User";
+    const role = localStorage.getItem("role") || "user";
+    const capitalizedUser = username.charAt(0).toUpperCase() + username.slice(1);
+
+    const welcomeMsgEl = document.getElementById("welcomeMsg");
+    const greetingMsgEl = document.getElementById("greetingMsg");
+
+    if (welcomeMsgEl) {
+        const firstName = capitalizedUser.split(" ")[0];
+        welcomeMsgEl.textContent = `Welcome, ${firstName}!`;
+    }
+    if (greetingMsgEl) {
+        const hour = new Date().getHours();
+        let greeting = "Good morning";
+        if (hour >= 12 && hour < 17) {
+            greeting = "Good afternoon";
+        } else if (hour >= 17 && hour < 21) {
+            greeting = "Good evening";
+        } else if (hour >= 21 || hour < 4) {
+            greeting = "Good night";
+        }
+        greetingMsgEl.textContent = `${greeting}!`;
+    }
+
+    const sessionRoleEl = document.getElementById("sessionRole");
+    if (sessionRoleEl) {
+        sessionRoleEl.textContent = role === "admin" ? "Admin" : "Portal User";
+    }
+
+    const sessionLoginTimeEl = document.getElementById("sessionLoginTime");
+    if (sessionLoginTimeEl) {
+        sessionLoginTimeEl.textContent = localStorage.getItem("loginTime") || "-";
+    }
+
+    // Populate profile details
+    const localProfile = {
+        username: username,
+        role: role,
+        cpfId: localStorage.getItem("cpfId") || "",
+        name: localStorage.getItem("name") || "",
+        mobileNo: localStorage.getItem("mobileNo") || ""
+    };
+
+    // If localProfile is missing details, generate deterministic fallbacks
+    if (!localProfile.cpfId) {
+        let hash = 0;
+        for (let i = 0; i < username.length; i++) {
+            hash = username.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const cifNum = Math.abs(hash % 900000) + 100000;
+        localProfile.cpfId = `ONGC-${cifNum}`;
+    }
+    if (!localProfile.name) {
+        localProfile.name = capitalizedUser;
+    }
+    if (!localProfile.mobileNo) {
+        localProfile.mobileNo = "+91-9999999999";
+    }
+
+
+    renderProfileDetails(localProfile);
+
+    // Fetch fresh profile details from backend
+    getUserProfile()
+        .then((freshProfile) => {
+            if (freshProfile) {
+                localStorage.setItem("cpfId", freshProfile.cpfId || "");
+                localStorage.setItem("name", freshProfile.name || "");
+                localStorage.setItem("mobileNo", freshProfile.mobileNo || "");
+                renderProfileDetails(freshProfile);
+            }
+        })
+        .catch((error) => {
+            console.warn("Could not fetch fresh user profile:", error);
+        });
 
     try {
         const allTickets = await getTickets();
@@ -56,7 +130,7 @@ async function initializeDashboard() {
             tableBody.innerHTML = `
                 <tr>
                     <td colspan="10" style="text-align:center;padding:20px;color:red;">
-                        Could not load your tickets. Start the backend: cd backend && npm start
+                        Could not load your issues. Start the backend: cd backend && npm start
                     </td>
                 </tr>
             `;
@@ -64,16 +138,57 @@ async function initializeDashboard() {
     }
 }
 
+function renderProfileDetails(profile) {
+    const empCpfIdEl = document.getElementById("empCpfId");
+    const empNameEl = document.getElementById("empName");
+    const empMobileEl = document.getElementById("empMobile");
+    const empRoleEl = document.getElementById("empRole");
+    const welcomeMsgEl = document.getElementById("welcomeMsg");
+
+    const displayName = profile.name || profile.username || "-";
+
+    if (empCpfIdEl) empCpfIdEl.textContent = profile.cpfId || "-";
+    if (empNameEl) empNameEl.textContent = displayName;
+    if (empMobileEl) empMobileEl.textContent = profile.mobileNo || "-";
+    if (empRoleEl) {
+        empRoleEl.textContent = profile.role === "admin" ? "System Administrator" : "Portal User";
+    }
+    if (welcomeMsgEl) {
+        const firstName = displayName.split(" ")[0];
+        welcomeMsgEl.textContent = `Welcome, ${firstName}!`;
+    }
+}
+
 function updateStats(tickets) {
     const total = tickets.length;
-    const open = tickets.filter(t => t.status === "Open").length;
-    const progress = tickets.filter(t => t.status === "In Progress").length;
-    const closed = tickets.filter(t => t.status === "Closed" || t.status === "Resolved").length;
+    const unresolved = tickets.filter(t => t.status === "Unresolved").length;
+    const resolved = tickets.filter(t => t.status === "Resolved").length;
 
-    setText("totalTickets", total);
-    setText("openTickets", open);
-    setText("inProgressTickets", progress);
-    setText("closedTickets", closed);
+    // Update legend and labels
+    setText("chartTotalCount", total);
+    setText("chartUnresolvedCount", unresolved);
+    setText("chartResolvedCount", resolved);
+
+    // Calculate percentages for pie chart
+    let unresolvedPercent = 0;
+    let resolvedPercent = 0;
+
+    if (total > 0) {
+        unresolvedPercent = (unresolved / total) * 100;
+        resolvedPercent = (resolved / total) * 100;
+    }
+
+    const chartEl = document.getElementById("statsPieChart");
+    if (chartEl) {
+        if (total === 0) {
+            chartEl.style.background = "#e2e8f0"; // Grey fallback circle
+        } else {
+            chartEl.style.background = `conic-gradient(
+                #f59e0b 0% ${unresolvedPercent}%,
+                #10b981 ${unresolvedPercent}% 100%
+            )`;
+        }
+    }
 }
 
 function setText(id, value) {
@@ -82,9 +197,10 @@ function setText(id, value) {
 }
 
 function populateFilters(tickets) {
-    fillSelect("statusFilter", uniqueValues(tickets, "status"));
-    fillSelect("priorityFilter", uniqueValues(tickets, "priority"));
-    fillSelect("categoryFilter", uniqueValues(tickets, "category"));
+    const statuses = ["Resolved", "Unresolved"];
+    const categories = ["PARADIGM", "OMEGA", "CGG", "GEOTOMO", "SCUBE", "SHARP REFLECTION", "LINUX"];
+    fillSelect("statusFilter", statuses);
+    fillSelect("categoryFilter", categories);
 }
 
 function uniqueValues(items, key) {
@@ -110,7 +226,6 @@ function fillSelect(id, values) {
 function bindFilters() {
     const filterIds = [
         "statusFilter",
-        "priorityFilter",
         "categoryFilter"
     ];
 
@@ -125,7 +240,6 @@ function bindFilters() {
 
 function applyFilters() {
     const status = document.getElementById("statusFilter")?.value || "";
-    const priority = document.getElementById("priorityFilter")?.value || "";
     const category = document.getElementById("categoryFilter")?.value || "";
     const search = (
         document.getElementById("ticketSearch")?.value || ""
@@ -133,19 +247,17 @@ function applyFilters() {
 
     const filtered = userTickets.filter((ticket) => {
         if (status && ticket.status !== status) return false;
-        if (priority && ticket.priority !== priority) return false;
         if (category && ticket.category !== category) return false;
-
         if (search) {
             const haystack = [
                 ticket.id,
                 ticket.status,
-                ticket.priority,
                 ticket.subject,
                 ticket.category,
                 ticket.raisedBy || "",
                 ticket.createdAt || "",
-                ticket.resolvedAt || ""
+                ticket.resolvedAt || "",
+                ticket.resolvedBy || ""
             ]
                 .join(" ")
                 .toLowerCase();
@@ -167,8 +279,8 @@ function renderTickets(tickets) {
     if (!tickets || tickets.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="10" style="text-align:center;padding:20px;color:#888;">
-                    No tickets found. Click '+ Raise New Ticket' to submit one.
+                <td colspan="7" style="text-align:center;padding:30px;color:var(--text-secondary);font-size:15px;font-weight:500;">
+                    No record found
                 </td>
             </tr>
         `;
@@ -177,32 +289,20 @@ function renderTickets(tickets) {
 
     tickets.forEach((ticket) => {
         const statusClass = getStatusClass(ticket.status);
-        
-        let replyText = "-";
-        let replyClass = "";
-        
-        if (ticket.reply) {
-            replyText = "Replied";
-            replyClass = "badge badge-closed"; // Green badge for replied
-        } else {
-            replyText = "Pending";
-            replyClass = "badge badge-warning"; // Yellow badge for pending
-        }
+        const resolver = ticket.resolvedBy || "-";
+        const capitalizedResolver = resolver !== "-" ? resolver.charAt(0).toUpperCase() + resolver.slice(1) : "-";
  
         tableBody.innerHTML += `
             <tr>
                 <td>#${ticket.id}</td>
-                <td><span class="badge ${statusClass}">${ticket.status || "-"}</span></td>
-                <td>${ticket.priority || "-"}</td>
-                <td>${escapeHtml(ticket.subject || "-")}</td>
                 <td>${ticket.category || "-"}</td>
-                <td>${escapeHtml(ticket.raisedBy || "-")}</td>
-                <td>${ticket.createdAt || "-"}</td>
-                <td>${ticket.resolvedAt || "-"}</td>
-                <td><span class="${replyClass}">${replyText}</span></td>
+                <td>${escapeHtml(ticket.subject || "-")}</td>
+                <td>${formatDate(ticket.createdAt)}</td>
+                <td>${formatDate(ticket.resolvedAt)}</td>
+                <td>${capitalizedResolver}</td>
                 <td>
-                    <a href="ticket-details.html?id=${ticket.id}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px; text-decoration: none;">
-                        View Ticket
+                    <a href="ticket-details.html?id=${ticket.id}" style="text-decoration: none;">
+                        <span class="badge ${statusClass}">${ticket.status || "-"}</span>
                     </a>
                 </td>
             </tr>
@@ -211,9 +311,8 @@ function renderTickets(tickets) {
 }
 
 function getStatusClass(status) {
-    if (status === "Open") return "badge-open";
-    if (status === "In Progress") return "badge-progress";
-    if (status === "Closed" || status === "Resolved") return "badge-closed";
+    if (status === "Unresolved") return "badge-progress";
+    if (status === "Resolved") return "badge-closed";
     return "";
 }
 
@@ -230,4 +329,19 @@ function escapeHtml(text) {
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
+}
+
+function formatDate(dateStr) {
+    if (!dateStr || dateStr === "-") return "-";
+    const parts = dateStr.trim().split(" ");
+    const datePart = parts[0];
+    if (datePart.includes("-")) {
+        const datePieces = datePart.split("-");
+        if (datePieces.length === 3 && datePieces[0].length === 4) {
+            // yyyy-mm-dd
+            const timePart = parts[1] ? ` ${parts[1]}` : "";
+            return `${datePieces[2]}/${datePieces[1]}/${datePieces[0]}${timePart}`;
+        }
+    }
+    return dateStr;
 }

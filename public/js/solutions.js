@@ -96,16 +96,19 @@ function renderSolutions(solutions) {
 
     solutions.forEach((solution) => {
         const row = document.createElement("tr");
+        const displayTitle = truncateText(solution.title, 45);
+        const displayPreview = formatPreview(solution.preview || "", solution.id, 120);
+
         row.innerHTML = `
-            <td>${solution.id}</td>
-            <td>
-                <span class="category-badge">${solution.category}</span>
+            <td class="id-cell">${solution.id}</td>
+            <td class="category-cell">
+                <span class="simple-category-text">${solution.category}</span>
             </td>
-            <td>${escapeHtml(solution.title)}</td>
-            <td>${escapeHtml(solution.preview || "")}</td>
-            <td>
+            <td class="title-cell">${escapeHtml(displayTitle)}</td>
+            <td class="preview-cell">${displayPreview}</td>
+            <td class="action-cell">
                 <button class="open-btn" data-id="${solution.id}">
-                    Open
+                    View
                 </button>
             </td>
         `;
@@ -127,4 +130,20 @@ function escapeHtml(text) {
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
+}
+
+function truncateText(text, limit = 45) {
+    if (!text) return "";
+    if (text.length > limit) {
+        return text.substring(0, limit) + "...";
+    }
+    return text;
+}
+
+function formatPreview(text, id, limit = 120) {
+    if (!text) return "";
+    if (text.length > limit) {
+        return escapeHtml(text.substring(0, limit)) + `... <a href="view-ticket.html?id=${id}" class="read-more-link">read more</a>`;
+    }
+    return escapeHtml(text);
 }

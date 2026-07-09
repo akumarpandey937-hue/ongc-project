@@ -15,12 +15,12 @@ async function initializeTicketDetails() {
             backLink.textContent = "← Back to Dashboard";
         } else {
             backLink.href = "user-dashboard.html";
-            backLink.textContent = "← Back to My Tickets";
+            backLink.textContent = "← Back to Issue Management Portal";
         }
     }
 
     if (!id) {
-        showError("Invalid ticket ID.");
+        showError("Invalid issue ID.");
         return;
     }
 
@@ -30,8 +30,8 @@ async function initializeTicketDetails() {
         renderResponses(currentTicket, role);
         setupAdminForm(currentTicket, role);
     } catch (error) {
-        console.error("Error loading ticket details:", error);
-        showError("Failed to load ticket details: " + error.message);
+        console.error("Error loading issue details:", error);
+        showError("Failed to load issue details: " + error.message);
     }
 }
 
@@ -51,7 +51,6 @@ function renderTicketInfo(ticket) {
     setText("ticketSubject", ticket.subject || "No Subject");
     setText("ticketId", `#${ticket.id}`);
     setText("ticketCategory", ticket.category || "-");
-    setText("ticketPriority", ticket.priority || "-");
 
     // Description (allows HTML from Quill editor)
     const descBox = document.getElementById("ticketDescription");
@@ -59,15 +58,42 @@ function renderTicketInfo(ticket) {
         descBox.innerHTML = ticket.description || "<p style='color:#888;'>No description provided.</p>";
     }
 
+    // Handle Attachment
+    const attachmentSection = document.getElementById("attachmentSection");
+    const attachmentLink = document.getElementById("attachmentLink");
+    const attachmentPreviewContainer = document.getElementById("attachmentPreviewContainer");
+    
+    if (attachmentSection && attachmentLink) {
+        if (ticket.attachment && ticket.attachment.url) {
+            attachmentSection.style.display = "block";
+            attachmentLink.href = ticket.attachment.url;
+            attachmentLink.textContent = ticket.attachment.name || "View Attachment";
+            
+            const urlPath = ticket.attachment.url.split('?')[0];
+            const ext = urlPath.split('.').pop().toLowerCase();
+            if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) {
+                attachmentPreviewContainer.style.display = "block";
+                attachmentPreviewContainer.innerHTML = `
+                    <img src="${ticket.attachment.url}" alt="Attachment Preview" style="max-width: 100%; max-height: 350px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer; transition: transform 0.2s;" onclick="window.open('${ticket.attachment.url}')">
+                `;
+            } else {
+                attachmentPreviewContainer.style.display = "none";
+                attachmentPreviewContainer.innerHTML = "";
+            }
+        } else {
+            attachmentSection.style.display = "none";
+        }
+    }
+
     // Status Badge
     const badgeContainer = document.getElementById("ticketStatusBadge");
     if (badgeContainer) {
         const statusClass = getStatusClass(ticket.status);
-        badgeContainer.innerHTML = `<span class="badge ${statusClass}">${ticket.status || "Open"}</span>`;
+        badgeContainer.innerHTML = `<span class="badge ${statusClass}">${ticket.status || "Unresolved"}</span>`;
 
         // Check if resolved and user is admin to show Add to Knowledge Hub option
         const role = localStorage.getItem("role") || "guest";
-        if (role === "admin" && (ticket.status === "Resolved" || ticket.status === "Closed")) {
+        if (role === "admin" && ticket.status === "Resolved") {
             const addBtn = document.createElement("button");
             addBtn.className = "btn btn-primary";
             addBtn.id = "addToKbBtn";
@@ -105,15 +131,45 @@ function renderResponses(ticket, role) {
     threadContainer.innerHTML = "";
 
     if (ticket.reply) {
+        const replier = ticket.repliedBy || "System Administrator";
+        const capitalizedReplier = replier.charAt(0).toUpperCase() + replier.slice(1);
+        const initials = replier.substring(0, Math.min(replier.length, 2)).toUpperCase();
+        const isResolved = ticket.status === "Resolved";
+        const cardClass = isResolved ? "reply-card" : "reply-card unresolved";
+        const statusClass = isResolved ? "badge-closed" : "badge-progress";
+
+        // Create footer text for resolution or reply details
+        let footerHtml = "";
+        if (isResolved && ticket.resolvedAt) {
+            footerHtml = `
+                <div class="reply-footer">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12" transform="scale(0.65) translate(2, 2)"></polyline>
+                    </svg>
+                    <span>Issue was resolved on <strong>${ticket.resolvedAt}</strong></span>
+                </div>
+            `;
+        } else {
+            footerHtml = `
+                <div class="reply-footer">
+                    <span>Reply processed successfully</span>
+                </div>
+            `;
+        }
+
         threadContainer.innerHTML = `
-            <div class="reply-card">
-                <div class="reply-avatar">AD</div>
+            <div class="${cardClass}">
+                <div class="reply-avatar">${initials}</div>
                 <div class="reply-content">
                     <div class="reply-header">
-                        <span class="reply-author">System Administrator (Response)</span>
-                        <span class="reply-time">Status: ${ticket.status}</span>
+                        <div class="reply-meta">
+                            <span class="reply-author">${capitalizedReplier}</span>
+                            <span class="reply-badge">Official Response</span>
+                        </div>
+                        <span class="badge ${statusClass}">${ticket.status}</span>
                     </div>
                     <div class="reply-body">${escapeHtml(ticket.reply)}</div>
+                    ${footerHtml}
                 </div>
             </div>
         `;
@@ -127,7 +183,7 @@ function renderResponses(ticket, role) {
         } else {
             threadContainer.innerHTML = `
                 <div class="no-reply-alert">
-                    No replies sent yet. Write a response below to reply to this ticket.
+                    No replies sent yet. Write a response below to reply to this issue.
                 </div>
             `;
         }
@@ -149,7 +205,7 @@ function setupAdminForm(ticket, role) {
             textarea.value = ticket.reply;
         }
         if (statusSelect) {
-            statusSelect.value = ticket.status || "Open";
+            statusSelect.value = "Resolved";
         }
 
         // Cancel Button logic
@@ -175,18 +231,15 @@ function setupAdminForm(ticket, role) {
 async function submitAdminReply() {
     if (!currentTicket) return;
 
-    const replyText = document.getElementById("adminReplyText")?.value.trim();
+    const replyText = document.getElementById("adminReplyText")?.value.trim() || "";
     const newStatus = document.getElementById("adminStatusSelect")?.value;
 
-    if (!replyText) {
-        alert("Please enter a reply message.");
-        return;
-    }
-
     try {
+        const adminUsername = localStorage.getItem("username") || "admin";
         const result = await updateTicket(currentTicket.id, {
             reply: replyText,
-            status: newStatus
+            status: newStatus,
+            repliedBy: adminUsername
         });
 
         alert("Reply submitted successfully!");
@@ -198,9 +251,8 @@ async function submitAdminReply() {
 }
 
 function getStatusClass(status) {
-    if (status === "Open") return "badge-open";
-    if (status === "In Progress") return "badge-progress";
-    if (status === "Closed" || status === "Resolved") return "badge-closed";
+    if (status === "Unresolved") return "badge-progress";
+    if (status === "Resolved") return "badge-closed";
     return "";
 }
 

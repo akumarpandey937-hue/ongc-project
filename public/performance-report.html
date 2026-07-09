@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Report - ONGC Support Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ticket.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- SIDEBAR (Rebuilt dynamically by main.js) -->
+        <aside class="sidebar">
+            <div class="logo-section">
+                <img src="assets/icons/logo.webp" alt="ONGC Logo">
+                <div class="logo-title">ONGC Support Portal</div>
+                <div class="logo-subtitle">Operations Workspace</div>
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <!-- Menu populated by main.js -->
+                </ul>
+            </div>
+            <div class="logout-area">
+                <button class="logout-btn" id="logoutBtn">Secure Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <div class="page-title">Performance Report</div>
+                    <div class="page-subtitle">Visual analytics showing issues raised by portal users and resolved by
+                        administrators</div>
+                </div>
+
+                <!-- Profile Menu (populated by main.js) -->
+                <div class="user-profile-menu">
+                    <button class="profile-trigger" id="profileTrigger" aria-label="User Profile">
+                        <span class="avatar-circle" id="avatarCircle">--</span>
+                        <span class="status-indicator online"></span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="dropdown-header">
+                            <div class="dropdown-avatar" id="dropdownAvatar">--</div>
+                            <div class="dropdown-user-info">
+                                <div class="dropdown-username" id="dropdownUsername">--</div>
+                                <div class="dropdown-role" id="dropdownRole">--</div>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-menu-list">
+                            <button class="dropdown-item" id="viewDetailsBtn">Account Details</button>
+                            <button class="dropdown-item logout-item" id="dropdownLogoutBtn">Sign Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN BODY -->
+            <div class="content-wrapper" style="display: flex; flex-direction: column; gap: 24px;">
+
+                <!-- Overall Stats Summary Cards -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+                    <div class="card stat-card" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
+                        <h4
+                            style="margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">
+                            Total Issues Tracked</h4>
+                        <h1 id="statTotalTickets"
+                            style="margin: 0; font-size: 32px; font-weight: 800; color: var(--accent-orange);">0</h1>
+                    </div>
+                    <div class="card stat-card" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
+                        <h4
+                            style="margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">
+                            Successfully Resolved</h4>
+                        <h1 id="statResolvedTickets"
+                            style="margin: 0; font-size: 32px; font-weight: 800; color: #10b981;">0</h1>
+                    </div>
+                    <div class="card stat-card" style="padding: 20px; display: flex; flex-direction: column; gap: 8px;">
+                        <h4
+                            style="margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">
+                            Active Admins / Users</h4>
+                        <h1 id="statActiveUsers" style="margin: 0; font-size: 32px; font-weight: 800; color: #3b82f6;">0
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Graphical Charts Section -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; min-height: 400px; width: 100%;">
+
+                    <!-- ADMIN RESOLUTIONS PERFORMANCE CHART -->
+                    <div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+                        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">
+                                Administrators Performance</h3>
+                            <span style="font-size: 12px; color: var(--text-secondary);">Number of resolved issues
+                                assigned to each Administrator</span>
+                        </div>
+                        <div
+                            style="flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; height: 320px;">
+                            <canvas id="adminPerformanceChart"></canvas>
+                            <div id="noAdminData"
+                                style="display: none; position: absolute; color: var(--text-muted); font-weight: 500;">
+                                No resolved issues recorded.</div>
+                        </div>
+                    </div>
+
+                    <!-- SOFTWARE WISE ISSUES CHART -->
+                    <div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+                        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">
+                                Software-wise Issues</h3>
+                            <span style="font-size: 12px; color: var(--text-secondary);">Total number of issues raised
+                                per software category</span>
+                        </div>
+                        <div
+                            style="flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; height: 320px;">
+                            <canvas id="softwareWiseIssuesChart"></canvas>
+                            <div id="noSoftwareData"
+                                style="display: none; position: absolute; color: var(--text-muted); font-weight: 500;">
+                                No software-wise issue data available.</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- USER RAISED ISSUES PERFORMANCE CHART (FULL WIDTH BELOW) -->
+                <div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 16px; width: 100%;">
+                    <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">Users
+                            Activity Overview</h3>
+                        <span style="font-size: 12px; color: var(--text-secondary);">Total number of issues raised by
+                            each User account</span>
+                    </div>
+                    <div
+                        style="flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; height: 450px;">
+                        <canvas id="userPerformanceChart"></canvas>
+                        <div id="noUserData"
+                            style="display: none; position: absolute; color: var(--text-muted); font-weight: 500;">No
+                            issues raised recorded.</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/api.js?v=1.2"></script>
+    <script src="js/main.js?v=1.2"></script>
+    <script src="js/performance-report.js?v=1.2"></script>
+</body>
+
+</html>

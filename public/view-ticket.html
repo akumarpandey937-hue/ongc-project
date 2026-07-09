@@ -18,10 +18,26 @@
         .detail-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
-            margin: 16px 0 24px;
-            color: var(--text-secondary);
+            gap: 12px;
+            margin: 20px 0 28px;
             font-size: 14px;
+        }
+
+        .detail-meta span {
+            background: #f8fafc;
+            color: #475569;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .detail-meta span strong {
+            color: #0f172a;
+            margin-right: 6px;
+            font-weight: 700;
         }
 
         .detail-preview {
@@ -58,9 +74,7 @@
         <div class="sidebar-menu">
             <ul>
                 <li><a href="index.html" class="active">Knowledge Hub</a></li>
-                <li><a href="dashboard.html">Ticket Dashboard</a></li>
-                <li><a href="raise-ticket.html">Raise Ticket</a></li>
-                <li><a href="add-solution.html">Add Solution</a></li>
+                <li><a href="dashboard.html">Issue Dashboard</a></li>
             </ul>
         </div>
 
@@ -107,41 +121,184 @@
             <div class="detail-card" id="solutionDetail">
                 <p>Loading...</p>
             </div>
+
+            <!-- ADMIN ACTIONS -->
+            <div id="adminActions" style="margin-top: 20px; display: none; gap: 12px; max-width: 900px;">
+                <button id="editBtn" class="btn btn-secondary" style="padding: 10px 20px; font-weight: 600; cursor: pointer; border-radius: 6px;">Edit Solution</button>
+                <button id="deleteBtn" class="btn btn-danger" style="padding: 10px 20px; font-weight: 600; background-color: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s;">Delete Solution</button>
+            </div>
+
+            <!-- EDIT FORM CARD -->
+            <div id="editFormCard" class="detail-card" style="display: none; margin-top: 20px;">
+                <h3>Edit Solution Article</h3>
+                <div class="form-group" style="margin-top: 16px; margin-bottom: 16px;">
+                    <label for="editTitle" style="display: block; margin-bottom: 8px; font-weight: 600;">Title</label>
+                    <input type="text" id="editTitle" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; font-family: inherit;">
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="editCategory" style="display: block; margin-bottom: 8px; font-weight: 600;">Software Category</label>
+                    <select id="editCategory" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <option>PARADIGM</option>
+                        <option>OMEGA</option>
+                        <option>CGG</option>
+                        <option>GEOTOMO</option>
+                        <option>SCUBE</option>
+                        <option>SHARP REFLECTION</option>
+                        <option>LINUX</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="editPreview" style="display: block; margin-bottom: 8px; font-weight: 600;">Content (HTML supported)</label>
+                    <textarea id="editPreview" rows="12" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button id="cancelEditBtn" class="btn btn-secondary" style="padding: 10px 20px; font-weight: 600; cursor: pointer; border-radius: 6px;">Cancel</button>
+                    <button id="saveEditBtn" class="btn btn-primary" style="padding: 10px 20px; font-weight: 600; cursor: pointer; border-radius: 6px;">Save Changes</button>
+                </div>
+            </div>
         </div>
 
-        <div class="footer">© Developed and Maintained by Database Group</div>
+        <div class="footer">Developed by Vansh Gupta</div>
     </div>
 </div>
 
-<script src="js/api.js"></script>
-<script src="js/main.js"></script>
+<script src="js/api.js?v=1.2"></script>
+<script src="js/main.js?v=1.2"></script>
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
 
     const container = document.getElementById("solutionDetail");
+    const adminActions = document.getElementById("adminActions");
+    const editFormCard = document.getElementById("editFormCard");
+    const editTitle = document.getElementById("editTitle");
+    const editCategory = document.getElementById("editCategory");
+    const editPreview = document.getElementById("editPreview");
 
     if (!id) {
         container.innerHTML = "<p>Invalid solution ID.</p>";
         return;
     }
 
-    try {
-        const solution = await getSolution(id);
+    let currentSolution = null;
 
-        container.innerHTML = `
-            <h2>${solution.title}</h2>
-            <div class="detail-meta">
-                <span><strong>ID:</strong> ${solution.id}</span>
-                <span><strong>Software Category:</strong> ${solution.category}</span>
-            </div>
-            <div class="detail-preview">${solution.preview || "No description available."}</div>
-        `;
-    } catch (error) {
-        container.innerHTML = `<p>Could not load solution: ${error.message}</p>`;
+    async function loadSolutionDetails() {
+        try {
+            currentSolution = await getSolution(id);
+
+            container.innerHTML = `
+                <h2>${escapeHtml(currentSolution.title)}</h2>
+                <div class="detail-meta">
+                    <span><strong>ID:</strong> ${currentSolution.id}</span>
+                    <span><strong>Software Category:</strong> ${currentSolution.category}</span>
+                    <span><strong>Published Date:</strong> ${currentSolution.date || "-"}</span>
+                    <span><strong>Created by:</strong> ${escapeHtml(currentSolution.author || "Admin")}</span>
+                </div>
+                <div class="detail-preview">${currentSolution.preview || "No description available."}</div>
+            `;
+
+            // If user is Admin, show admin controls
+            const role = localStorage.getItem("role") || "guest";
+            if (role === "admin") {
+                adminActions.style.display = "flex";
+            }
+        } catch (error) {
+            container.innerHTML = `<p>Could not load solution: ${error.message}</p>`;
+        }
+    }
+
+    await loadSolutionDetails();
+
+    // Edit logic
+    const editBtn = document.getElementById("editBtn");
+    const deleteBtn = document.getElementById("deleteBtn");
+    const cancelEditBtn = document.getElementById("cancelEditBtn");
+    const saveEditBtn = document.getElementById("saveEditBtn");
+
+    if (editBtn) {
+        editBtn.addEventListener("click", () => {
+            if (!currentSolution) return;
+            
+            // Pre-fill form
+            editTitle.value = currentSolution.title || "";
+            editCategory.value = currentSolution.category || "PARADIGM";
+            editPreview.value = currentSolution.preview || "";
+
+            // Toggle view
+            container.style.display = "none";
+            adminActions.style.display = "none";
+            editFormCard.style.display = "block";
+        });
+    }
+
+    if (cancelEditBtn) {
+        cancelEditBtn.addEventListener("click", () => {
+            container.style.display = "block";
+            adminActions.style.display = "flex";
+            editFormCard.style.display = "none";
+        });
+    }
+
+    if (saveEditBtn) {
+        saveEditBtn.addEventListener("click", async () => {
+            const title = editTitle.value.trim();
+            const category = editCategory.value;
+            const preview = editPreview.value.trim();
+
+            if (!title) {
+                alert("Please enter a title.");
+                return;
+            }
+
+            saveEditBtn.disabled = true;
+            saveEditBtn.textContent = "Saving...";
+
+            try {
+                await updateSolution(id, { title, category, preview });
+                alert("Solution updated successfully!");
+                editFormCard.style.display = "none";
+                container.style.display = "block";
+                await loadSolutionDetails();
+            } catch (err) {
+                console.error(err);
+                alert("Failed to update solution: " + err.message);
+            } finally {
+                saveEditBtn.disabled = false;
+                saveEditBtn.textContent = "Save Changes";
+            }
+        });
+    }
+
+    if (deleteBtn) {
+        deleteBtn.addEventListener("click", async () => {
+            if (!confirm("Are you sure you want to delete this solution article?")) {
+                return;
+            }
+
+            deleteBtn.disabled = true;
+            deleteBtn.textContent = "Deleting...";
+
+            try {
+                await deleteSolution(id);
+                alert("Solution deleted successfully!");
+                window.location.href = "index.html";
+            } catch (err) {
+                console.error(err);
+                alert("Failed to delete solution: " + err.message);
+                deleteBtn.disabled = false;
+                deleteBtn.textContent = "Delete Solution";
+            }
+        });
     }
 });
+
+function escapeHtml(text) {
+    if (!text) return "";
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
 </script>
 
 </body>

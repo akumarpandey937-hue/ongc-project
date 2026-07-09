@@ -1,38 +1,25 @@
 const express = require("express");
-const fs = require("fs");
-const path = require("path");
+const pool = require("../config/db");
 
 const router = express.Router();
 
-const ticketsPath = path.join(__dirname, "../data/tickets.json");
+// GET stats endpoint
+router.get("/stats", async (req, res) => {
+    try {
+        const [totalRows] = await pool.query("SELECT COUNT(*) as count FROM issues");
+        const [resolvedRows] = await pool.query("SELECT COUNT(*) as count FROM issues WHERE status = 'Resolved'");
+        const [unresolvedRows] = await pool.query("SELECT COUNT(*) as count FROM issues WHERE status = 'Unresolved'");
 
-function loadTickets() {
-    return JSON.parse(fs.readFileSync(ticketsPath, "utf8"));
-}
-
-router.get("/stats", (req, res) => {
-    const tickets = loadTickets();
-
-    const openTickets = tickets.filter(
-        (t) => t.status === "Open"
-    ).length;
-
-    const inProgressTickets = tickets.filter(
-        (t) => t.status 
-        === "In Progress"
-    ).length;
-
-    const slaBreached = tickets.filter((t) => {
-        const sla = (t.sla || "").toLowerCase();
-        return sla.includes("breach") && !sla.includes("within");
-    }).length;
-
-    res.json({
-        totalTickets: tickets.length,
-        openTickets,
-        inProgressTickets,
-        slaBreached
-    });
+        res.json({
+            totalTickets: totalRows[0].count,
+            resolvedTickets: resolvedRows[0].count,
+            unresolvedTickets: unresolvedRows[0].count,
+            slaBreached: 0 // SLA column was removed to simplify schema as per UI requirements
+        });
+    } catch (err) {
+        console.error("Dashboard stats query error:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
 });
 
 module.exports = router;

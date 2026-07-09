@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,151 +8,195 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
+
 <body>
 
-<div class="app-container">
+    <div class="app-container">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="logo-section">
-            <img src="assets/icons/logo.webp" alt="logo">
-            <div class="logo-title">Ongc Support Portal</div>
-            <div class="logo-subtitle">Operations Workspace</div>
-        </div>
-
-
-
-        <div class="sidebar-menu">
-            <ul>
-                <!-- Dynamic Menu loaded from main.js -->
-            </ul>
-        </div>
-
-        <div class="logout-area">
-            <button class="logout-btn" id="logoutBtn">Secure Logout</button>
-        </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
-        <div class="topbar">
-            <div>
-                <div class="page-title">My Tickets</div>
-                <div class="page-subtitle">Track and view status of your raised issues</div>
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo-section">
+                <img src="assets/icons/logo.webp" alt="logo">
+                <div class="logo-title">Ongc Support Portal</div>
+                <div class="logo-subtitle">Operations Workspace</div>
             </div>
 
-            <div class="user-profile-menu">
-                <button class="profile-trigger" id="profileTrigger" aria-label="User Profile">
-                    <span class="avatar-circle" id="avatarCircle">--</span>
-                    <span class="status-indicator online"></span>
-                </button>
-                <div class="profile-dropdown" id="profileDropdown">
-                    <div class="dropdown-header">
-                        <div class="dropdown-avatar" id="dropdownAvatar">--</div>
-                        <div class="dropdown-user-info">
-                            <div class="dropdown-username" id="dropdownUsername">--</div>
-                            <div class="dropdown-role" id="dropdownRole">--</div>
+
+
+            <div class="sidebar-menu">
+                <ul>
+                    <!-- Dynamic Menu loaded from main.js -->
+                </ul>
+            </div>
+
+            <div class="logout-area">
+                <button class="logout-btn" id="logoutBtn">Secure Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <div class="topbar">
+                <div>
+                    <div class="page-title">Issue Management Portal</div>
+                    <div class="page-subtitle">Track and view status of your raised issues</div>
+                </div>
+
+                <div class="user-profile-menu">
+                    <button class="profile-trigger" id="profileTrigger" aria-label="User Profile">
+                        <span class="avatar-circle" id="avatarCircle">--</span>
+                        <span class="status-indicator online"></span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="dropdown-header">
+                            <div class="dropdown-avatar" id="dropdownAvatar">--</div>
+                            <div class="dropdown-user-info">
+                                <div class="dropdown-username" id="dropdownUsername">--</div>
+                                <div class="dropdown-role" id="dropdownRole">--</div>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-menu-list">
+                            <button class="dropdown-item" id="viewDetailsBtn">
+                                Account Details
+                            </button>
+                            <button class="dropdown-item logout-item" id="dropdownLogoutBtn">
+                                Sign Out
+                            </button>
                         </div>
                     </div>
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-menu-list">
-                        <button class="dropdown-item" id="viewDetailsBtn">
-                            Account Details
-                        </button>
-                        <button class="dropdown-item logout-item" id="dropdownLogoutBtn">
-                            Sign Out
-                        </button>
+                </div>
+            </div>
+
+            <div class="content-wrapper">
+
+
+                <!-- STATS / EMPLOYEE INFO SECTION -->
+                <div class="user-dashboard-row"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <!-- LEFT CARD: Constant Employee Profile -->
+                    <div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box; min-height: 250px;">
+                        <!-- TOP SECTION: Welcome and Greeting -->
+                        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 16px; display: flex; flex-direction: column; gap: 6px;">
+                            <h3 style="font-size: 22px; font-weight: 700; color: var(--text-primary); margin: 0;" id="welcomeMsg">
+                                Welcome!
+                            </h3>
+                            <p style="font-size: 14px; color: var(--text-secondary); margin: 0;" id="greetingMsg">
+                                Good day!
+                            </p>
+                        </div>
+                        
+                        <!-- MAIN SECTION: Employee Details Grid -->
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; flex-grow: 1;">
+                            <!-- Name Tile -->
+                            <div style="background: var(--hover-bg); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+                                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Name</span>
+                                <span id="empName" style="font-size: 15px; color: var(--text-primary); font-weight: 700;">-</span>
+                            </div>
+                            <!-- CPF ID Tile -->
+                            <div style="background: var(--hover-bg); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+                                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">CPF ID</span>
+                                <span id="empCpfId" style="font-family: monospace; font-size: 15px; color: var(--accent-orange); font-weight: 700;">-</span>
+                            </div>
+                            <!-- Mobile No. Tile -->
+                            <div style="background: var(--hover-bg); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+                                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Mobile No.</span>
+                                <span id="empMobile" style="font-size: 14px; color: var(--text-primary); font-weight: 600;">-</span>
+                            </div>
+                            <!-- Role Tile -->
+                            <div style="background: var(--hover-bg); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px;">
+                                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Portal Role</span>
+                                <span id="empRole" style="font-size: 14px; color: var(--text-primary); font-weight: 600;">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT CARD: Issues Distribution Pie Chart -->
+                    <div class="card chart-card"
+                        style="display: flex; flex-direction: column; gap: 16px; padding: 24px; height: 100%;">
+                        <span
+                            style="font-weight: 700; font-size: 18px; color: var(--text-primary); border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">Issues
+                            Distribution</span>
+                        <div
+                            style="display: flex; align-items: center; justify-content: space-around; gap: 24px; flex: 1; padding: 8px 0;">
+                            <!-- Chart element -->
+                            <div id="statsPieChart"
+                                style="width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(#3b82f6 0% 0%, #f59e0b 0% 0%, #10b981 0% 0%); box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-shrink: 0;">
+                            </div>
+
+                            <!-- Legend list -->
+                            <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span
+                                        style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background-color: #f59e0b;"></span>
+                                    <span style="font-weight: 600; color: var(--text-secondary);">Unresolved: <span
+                                            id="chartUnresolvedCount"
+                                            style="color: var(--text-primary);">0</span></span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span
+                                        style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background-color: #10b981;"></span>
+                                    <span style="font-weight: 600; color: var(--text-secondary);">Resolved: <span
+                                            id="chartResolvedCount" style="color: var(--text-primary);">0</span></span>
+                                </div>
+                                <div
+                                    style="margin-top: 4px; padding-top: 8px; border-top: 1px solid var(--border-color); font-weight: 700; color: var(--text-primary);">
+                                    Total Issues: <span id="chartTotalCount">0</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="content-wrapper">
-            <!-- HEADING -->
-            <div class="dashboard-header">
-                <div>
-                    <h2>My Support Requests</h2>
-                    <p>Manage your raised queries and check responses from administration</p>
+                <!-- FILTERS -->
+                <div class="card dashboard-filters">
+                    <select id="statusFilter">
+                        <option value="">All Statuses</option>
+                    </select>
+                    <select id="categoryFilter">
+                        <option value="">All Software Categories</option>
+                    </select>
+                    <a href="raise-ticket.html" class="btn btn-primary"
+                        style="display:inline-block;text-decoration:none;text-align:center;padding:12px 20px;">
+                        + Raise New Issue
+                    </a>
+                </div>
+
+                <!-- TABLE -->
+                <div class="card">
+                    <div class="table-header">
+                        <input type="text" placeholder="Search my issues..." id="ticketSearch">
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category</th>
+                                <th>Subject</th>
+                                <th>Date Raised</th>
+                                <th>Date Resolved</th>
+                                <th>Resolved By</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticketTableBody">
+                            <!-- Tickets list -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- STATS -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>My Total Tickets</h4>
-                    <h1 id="totalTickets">-</h1>
-                </div>
-                <div class="stat-card">
-                    <h4>Open Issues</h4>
-                    <h1 id="openTickets">-</h1>
-                </div>
-                <div class="stat-card">
-                    <h4>In Progress</h4>
-                    <h1 id="inProgressTickets">-</h1>
-                </div>
-                <div class="stat-card">
-                    <h4>Resolved / Closed</h4>
-                    <h1 id="closedTickets">-</h1>
-                </div>
+            <div class="footer">
+                Developed by Vansh Gupta
             </div>
-
-            <!-- FILTERS -->
-            <div class="card dashboard-filters">
-                <select id="statusFilter">
-                    <option value="">All Statuses</option>
-                </select>
-                <select id="priorityFilter">
-                    <option value="">All Priorities</option>
-                </select>
-                <select id="categoryFilter">
-                    <option value="">All Software Categories</option>
-                </select>
-                <div></div> <!-- Spacer -->
-            </div>
-
-            <div style="margin-bottom:16px;">
-                <a href="raise-ticket.html" class="btn btn-primary" style="display:inline-block;text-decoration:none;">
-                    + Raise New Ticket
-                </a>
-            </div>
-
-            <!-- TABLE -->
-            <div class="card">
-                <div class="table-header">
-                    <input type="text" placeholder="Search my tickets..." id="ticketSearch">
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Status</th>
-                            <th>Priority</th>
-                            <th>Subject</th>
-                            <th>Category</th>
-                            <th>User</th>
-                            <th>Date Raised</th>
-                            <th>Date Resolved</th>
-                            <th>Admin Reply</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ticketTableBody">
-                        <!-- Tickets list -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="footer">
-            © Developed and Maintained by Database Group
         </div>
     </div>
-</div>
 
-<script src="js/api.js"></script>
-<script src="js/main.js"></script>
-<script src="js/user-dashboard.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/user-dashboard.js"></script>
 
 </body>
+
 </html>

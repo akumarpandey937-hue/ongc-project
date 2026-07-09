@@ -1,12 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
+    function formatDateTime(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    }
+
     const loginForm = document.getElementById("loginForm");
     if (!loginForm) return;
 
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const username =
-            document.getElementById("username").value.trim();
+        const cpfId =
+            document.getElementById("cpfId")?.value.trim() ||
+            document.getElementById("username")?.value.trim();
         const password =
             document.getElementById("password").value;
 
@@ -20,8 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
 
-        if (!username || !password) {
-            showError("Please enter both username and password");
+        if (!cpfId || !password) {
+            showError("Please enter both CPF ID and password");
             return;
         }
 
@@ -31,13 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ cpfId, password })
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                showError(data.message || "Invalid username or password");
+                showError(data.message || "Invalid CPF ID or password");
                 return;
             }
 
@@ -46,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("token", data.token);
             localStorage.setItem("username", data.username);
             localStorage.setItem("role", data.role);
-            localStorage.setItem("loginTime", new Date().toLocaleString());
+            localStorage.setItem("loginTime", formatDateTime(new Date()));
 
             // Redirect based on role
             if (data.role === "admin") {

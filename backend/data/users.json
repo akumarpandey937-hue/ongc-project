@@ -1,17 +1,49 @@
 [
   {
     "username": "admin",
-    "passwordHash": "$2b$10$Whns3HrOEjv0hXrZ0Tj31u09To94mmNPaF7LIpSMYJ18z8MgGXu5W",
-    "role": "admin"
+    "passwordHash": "$2b$10$UjQvwuHfXXNM.G2fTDPZw.WVttcOd1KHOOu2zyesRkIcL6w.rHVHK",
+    "role": "admin",
+    "cpfId": "987654",
+    "name": "Administrator",
+    "mobileNo": "9999999999",
+    "software": "LINUX"
+  },
+  {
+    "username": "admin2",
+    "passwordHash": "$2b$10$UjQvwuHfXXNM.G2fTDPZw.WVttcOd1KHOOu2zyesRkIcL6w.rHVHK",
+    "role": "admin",
+    "cpfId": "987655",
+    "name": "Assistant Admin",
+    "mobileNo": "9999999998",
+    "software": "SCUBE"
   },
   {
     "username": "user",
-    "passwordHash": "$2b$10$p/tTPkilLEch6.7ddDKsle5aMOgui/XtOTiTI439NOpj026Bv0Za6",
-    "role": "user"
+    "passwordHash": "$2b$10$XUupeKcodk9tZraiQamPuu4bjG4a3hwiAJw.YhKru2689T1HUvYRe",
+    "role": "user",
+    "cpfId": "123456",
+    "name": "Standard User",
+    "mobileNo": "9876543210",
+    "software": "PARADIGM",
+    "status": "active"
   },
   {
     "username": "vansh",
-    "passwordHash": "$2b$10$8TIum4sSd9fYAi4yrHzuQOLMsg7AfWtoBsMhpWZKuFdpy/cMSQSfy",
-    "role": "user"
+    "passwordHash": "$2b$10$XUupeKcodk9tZraiQamPuu4bjG4a3hwiAJw.YhKru2689T1HUvYRe",
+    "role": "user",
+    "cpfId": "111111",
+    "name": "Vansh Gupta",
+    "mobileNo": "9123456789",
+    "software": "GEOTOMO"
+  },
+  {
+    "username": "xyz",
+    "passwordHash": "$2b$10$BLVkBzz/HjdIa0MT8JqgOun1KAl4vTuOAHeTSZYWtTj3iRA29M0ou",
+    "role": "user",
+    "cpfId": "49884",
+    "name": "XYZ ABC",
+    "mobileNo": "595948948",
+    "software": "SHARP REFLECTION",
+    "status": "inactive"
   }
 ]

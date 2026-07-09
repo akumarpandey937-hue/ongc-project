@@ -1,173 +1,178 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const pool = require("../config/db");
 
 const router = express.Router();
 
-const dataPath = path.join(
-    __dirname,
-    "../data/tickets.json"
-);
-
 // Get All Tickets
-router.get("/", (req, res) => {
-
-    const tickets =
-        JSON.parse(
-            fs.readFileSync(dataPath)
-        );
-
-    res.json(tickets);
-
+router.get("/", async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM issues ORDER BY id DESC");
+        res.json(rows);
+    } catch (err) {
+        console.error("Fetch tickets error:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
 });
 
 // Get Single Ticket
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM issues WHERE id = ?", [req.params.id]);
+        const ticket = rows[0];
 
-    const tickets =
-        JSON.parse(
-            fs.readFileSync(dataPath)
-        );
+        if (!ticket) {
+            return res.status(404).json({
+                message: "Ticket not found"
+            });
+        }
 
-    const ticket =
-        tickets.find(
-            t => t.id == req.params.id
-        );
-
-    if (!ticket) {
-
-        return res.status(404).json({
-            message: "Ticket not found"
-        });
-
+        res.json(ticket);
+    } catch (err) {
+        console.error("Fetch ticket error:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
-
-    res.json(ticket);
-
 });
 
 // Create Ticket
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
+    let attachment = null;
+    if (req.body.attachment && req.body.attachment.data) {
+        try {
+            const uploadDir = path.join(__dirname, "../../public/uploads");
+            if (!fs.existsSync(uploadDir)) {
+                fs.mkdirSync(uploadDir, { recursive: true });
+            }
+            const safeName = `${Date.now()}-${req.body.attachment.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+            const filePath = path.join(uploadDir, safeName);
+            fs.writeFileSync(filePath, Buffer.from(req.body.attachment.data, "base64"));
+            attachment = {
+                name: req.body.attachment.name,
+                url: `/uploads/${safeName}`
+            };
+        } catch (err) {
+            console.error("Failed to save attachment:", err);
+        }
+    }
 
-    const tickets =
-        JSON.parse(
-            fs.readFileSync(dataPath)
+    try {
+        const status = "Unresolved";
+        const subject = req.body.subject;
+        const category = req.body.category;
+        const raisedBy = req.body.raisedBy;
+        const description = req.body.description || "";
+        const createdAt = new Date().toISOString().slice(0, 10);
+
+        const [result] = await pool.query(
+            "INSERT INTO issues (status, subject, category, raisedBy, description, attachment, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [
+                status,
+                subject,
+                category,
+                raisedBy,
+                description,
+                attachment ? JSON.stringify(attachment) : null,
+                createdAt
+            ]
         );
 
-    const newTicket = {
+        const newTicket = {
+            id: result.insertId,
+            status,
+            subject,
+            category,
+            raisedBy,
+            description,
+            attachment,
+            createdAt
+        };
 
-        id: Date.now(),
-
-        status: "Open",
-
-        sla: "Within SLA",
-
-        priority: req.body.priority,
-
-        subject: req.body.subject,
-
-        category: req.body.category,
-
-        raisedBy: req.body.raisedBy,
-
-        description: req.body.description || "",
-
-        createdAt:
-            new Date()
-            .toISOString()
-            .slice(0, 10)
-
-    };
-
-    tickets.push(newTicket);
-
-    fs.writeFileSync(
-        dataPath,
-        JSON.stringify(
-            tickets,
-            null,
-            2
-        )
-    );
-
-    res.status(201).json({
-        message:
-            "Ticket Created Successfully",
-        ticket: newTicket
-    });
-
-});
-// Update Ticket
-router.patch("/:id", (req, res) => {
-    const tickets = JSON.parse(
-        fs.readFileSync(dataPath)
-    );
-
-    const index = tickets.findIndex(
-        (t) => t.id == req.params.id
-    );
-
-    if (index === -1) {
-        return res.status(404).json({
-            message: "Ticket not found"
+        res.status(201).json({
+            message: "Ticket Created Successfully",
+            ticket: newTicket
         });
+    } catch (err) {
+        console.error("Create ticket error:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
+});
 
-    const prevStatus = tickets[index].status;
-    const newStatus = req.body.status;
-    let resolvedAt = tickets[index].resolvedAt || "-";
+// Update Ticket
+router.patch("/:id", async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM issues WHERE id = ?", [req.params.id]);
+        const ticket = rows[0];
 
-    if ((newStatus === "Resolved" || newStatus === "Closed") && (prevStatus !== "Resolved" && prevStatus !== "Closed")) {
-        resolvedAt = new Date().toISOString().slice(0, 10);
-    } else if (newStatus && newStatus !== "Resolved" && newStatus !== "Closed") {
-        resolvedAt = "-";
+        if (!ticket) {
+            return res.status(404).json({
+                message: "Ticket not found"
+            });
+        }
+
+        const prevStatus = ticket.status;
+        const newStatus = req.body.status;
+        let resolvedAt = ticket.resolvedAt || "-";
+        let resolvedBy = ticket.resolvedBy || ticket.repliedBy || "-";
+
+        if (newStatus === "Resolved") {
+            if (prevStatus !== "Resolved") {
+                resolvedAt = new Date().toISOString().slice(0, 10);
+                resolvedBy = req.body.repliedBy || req.body.resolvedBy || "admin";
+            } else if (req.body.repliedBy || req.body.resolvedBy) {
+                resolvedBy = req.body.repliedBy || req.body.resolvedBy;
+            }
+        } else if (newStatus && newStatus !== "Resolved") {
+            resolvedAt = "-";
+            resolvedBy = "-";
+        }
+
+        const updatedStatus = newStatus !== undefined ? newStatus : ticket.status;
+        const updatedReply = req.body.reply !== undefined ? req.body.reply : ticket.reply;
+        const updatedRepliedBy = req.body.repliedBy !== undefined ? req.body.repliedBy : ticket.repliedBy;
+
+        await pool.query(
+            "UPDATE issues SET status = ?, reply = ?, repliedBy = ?, resolvedAt = ?, resolvedBy = ? WHERE id = ?",
+            [
+                updatedStatus,
+                updatedReply,
+                updatedRepliedBy,
+                resolvedAt,
+                resolvedBy,
+                req.params.id
+            ]
+        );
+
+        const [updatedRows] = await pool.query("SELECT * FROM issues WHERE id = ?", [req.params.id]);
+
+        res.json({
+            message: "Ticket updated successfully",
+            ticket: updatedRows[0]
+        });
+    } catch (err) {
+        console.error("Update ticket error:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
-
-    tickets[index] = {
-        ...tickets[index],
-        ...req.body,
-        resolvedAt: req.body.resolvedAt || resolvedAt,
-        id: tickets[index].id
-    };
-
-    fs.writeFileSync(
-        dataPath,
-        JSON.stringify(tickets, null, 2)
-    );
-
-    res.json({
-        message: "Ticket updated successfully",
-        ticket: tickets[index]
-    });
 });
 
 // Delete Ticket
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
+    try {
+        const [result] = await pool.query("DELETE FROM issues WHERE id = ?", [req.params.id]);
 
-    const tickets =
-        JSON.parse(
-            fs.readFileSync(dataPath)
-        );
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "Ticket not found"
+            });
+        }
 
-    const updatedTickets =
-        tickets.filter(
-            ticket =>
-            ticket.id != req.params.id
-        );
-
-    fs.writeFileSync(
-        dataPath,
-        JSON.stringify(
-            updatedTickets,
-            null,
-            2
-        )
-    );
-
-    res.json({
-        message:
-        "Ticket Deleted Successfully"
-    });
-
+        res.json({
+            message: "Ticket Deleted Successfully"
+        });
+    } catch (err) {
+        console.error("Delete ticket error:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
 });
+
 module.exports = router;
